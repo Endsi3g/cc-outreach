@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "paths": {
+      "@cc-outreach/shared-types": ["../../packages/shared-types/src/index.ts"],
+      "@cc-outreach/shared-utils": ["../../packages/shared-utils/src/index.ts"],
+      "@cc-outreach/prompt-library": ["../../packages/prompt-library/src/index.ts"],
+      "@cc-outreach/integrations": ["../../packages/integrations/src/index.ts"],
+      "@cc-outreach/database/*": ["../../packages/database/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

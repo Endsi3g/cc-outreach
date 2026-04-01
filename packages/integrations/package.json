@@ -1,0 +1,24 @@
+{
+  "name": "@cc-outreach/integrations",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@cc-outreach/shared-types": "workspace:*",
+    "@cc-outreach/shared-utils": "workspace:*",
+    "apify-client": "^2.22.3",
+    "axios": "^1.7.0",
+    "cheerio": "^1.0.0",
+    "googleapis": "^140.0.0"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.0",
+    "typescript": "^5.4.0"
+  }
+}

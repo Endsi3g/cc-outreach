@@ -1,0 +1,510 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Prisma Schema — cc-outreach
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../packages/database/src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ────────────────────────────────────────────────────────────────────
+
+enum LeadStatus {
+  NEW
+  ENRICHING
+  ENRICHED
+  SCORING
+  SCORED
+  OUTREACH_DRAFT
+  OUTREACH_READY
+  SENT
+  REPLIED
+  QUALIFIED
+  DISQUALIFIED
+  LOST
+  WON
+}
+
+enum PipelineStage {
+  COLD
+  CONTACTED
+  ENGAGED
+  MEETING
+  PROPOSAL
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum CompanyNiche {
+  CONSTRUCTION
+  TOITURE
+  EXCAVATION
+  HVAC
+  ELECTRICITE
+  PLOMBERIE
+  PORTES_FENETRES
+  RENOVATION
+  PAYSAGEMENT
+  OTHER
+}
+
+enum CompanyRegion {
+  MONTREAL
+  LAVAL
+  RIVE_SUD
+  RIVE_NORD
+  QUEBEC_CITY
+  ESTRIE
+  LANAUDIERE
+  OUTAOUAIS
+  OTHER_QC
+}
+
+enum ContactRole {
+  OWNER
+  MANAGER
+  SALES
+  ADMIN
+  TECHNICIAN
+  UNKNOWN
+}
+
+enum ContactConfidence {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum SourceType {
+  GOOGLE_MAPS
+  WEBSITE
+  LINKEDIN_PUBLIC
+  ANNUAIRE
+  REGISTRE_NEQ
+  GOOGLE_REVIEWS
+  MANUAL
+}
+
+enum OutreachLanguage {
+  FR
+  EN
+}
+
+enum OutreachAngle {
+  SITE_VIEILLISSANT
+  CONTENU_INSUFFISANT
+  MANQUE_PREUVES_TRAVAUX
+  STRUCTURE_LOCALE_FAIBLE
+  CTA_PEU_VISIBLE
+  SUIVI_LEAD
+  SEO_LOCAL
+  CONVERSION
+  AUTOMATISATION
+  OTHER
+}
+
+enum OutreachStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  SCHEDULED
+  SENT
+  FAILED
+}
+
+enum ComplianceFlag {
+  LOW_CONFIDENCE_CONTACT
+  LOW_PERSONALIZATION_CONFIDENCE
+  INSUFFICIENT_PUBLIC_EVIDENCE
+  POTENTIAL_PRIVACY_RISK
+  TRACKING_REQUIRES_REVIEW
+  GMAIL_QUOTA_RISK
+  LANGUAGE_AMBIGUITY
+  WEBSITE_AUDIT_INSUFFICIENT
+}
+
+enum ActivityEventType {
+  LEAD_IMPORTED
+  ENRICHMENT_STARTED
+  ENRICHMENT_COMPLETED
+  AUDIT_STARTED
+  AUDIT_COMPLETED
+  SCORING_COMPLETED
+  DRAFT_GENERATED
+  DRAFT_APPROVED
+  EMAIL_SENT
+  EMAIL_REPLIED
+  STAGE_CHANGED
+  NOTE_ADDED
+  REMINDER_SET
+  HUMAN_REVIEW_REQUIRED
+}
+
+enum AiProvider {
+  OLLAMA
+  GROQ
+  OPENROUTER
+}
+
+// ─── USERS & WORKSPACE ────────────────────────────────────────────────────────
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  passwordHash      String?
+  name              String?
+  avatarUrl         String?
+  locale            String    @default("fr")
+  notifyTelegram    Boolean   @default(false)
+  notifyDiscord     Boolean   @default(false)
+  googleId          String?   @unique
+  gmailAccessToken  String?
+  gmailRefreshToken String?
+  gmailTokenExpiry  DateTime?
+  gmailEmail        String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  leads          Lead[]
+  activities     Activity[]
+  reminders      Reminder[]
+  outreachDrafts OutreachDraft[]
+
+  @@map("users")
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  settings  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workspaces")
+}
+
+// ─── COMPANIES ────────────────────────────────────────────────────────────────
+
+model Company {
+  id                String         @id @default(cuid())
+  name              String
+  slug              String         @unique
+  niche             CompanyNiche
+  region            CompanyRegion?
+  city              String?
+  address           String?
+  postalCode        String?
+  province          String         @default("QC")
+  website           String?
+  domain            String?        @unique
+  phone             String?
+  email             String?
+  googleMapsUrl     String?
+  googlePlaceId     String?        @unique
+  googleRating      Float?
+  googleReviewCount Int?
+  description       String?
+  notes             String?
+  // Maturité digitale
+  hasModernSite     Boolean?
+  hasChatbot        Boolean?
+  hasBookingSystem  Boolean?
+  hasGoogleAds      Boolean?
+  hasSocialMedia    Boolean?
+  socialMediaLinks  Json?
+  // Meta
+  neqNumber         String?
+  yearFounded       Int?
+  employeeCount     String? // "1-5", "5-20", etc.
+  isActive          Boolean        @default(true)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  contacts     Contact[]
+  sources      Source[]
+  lead         Lead?
+  websiteAudit WebsiteAudit?
+  score        Score?
+  tags         CompanyTag[]
+
+  @@index([niche, region])
+  @@index([domain])
+  @@map("companies")
+}
+
+// ─── CONTACTS ─────────────────────────────────────────────────────────────────
+
+model Contact {
+  id          String            @id @default(cuid())
+  companyId   String
+  firstName   String?
+  lastName    String?
+  fullName    String?
+  role        ContactRole       @default(UNKNOWN)
+  email       String?
+  phone       String?
+  linkedinUrl String?
+  source      SourceType
+  confidence  ContactConfidence @default(LOW)
+  notes       String?
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  outreachDrafts OutreachDraft[]
+
+  @@index([companyId])
+  @@index([email])
+  @@map("contacts")
+}
+
+// ─── SOURCES ──────────────────────────────────────────────────────────────────
+
+model Source {
+  id             String     @id @default(cuid())
+  companyId      String
+  type           SourceType
+  url            String?
+  fetchedAt      DateTime
+  contentHash    String?
+  rawPayload     Json?
+  normalizedData Json?
+  confidence     Float      @default(0.5)
+  isStale        Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, type])
+  @@map("sources")
+}
+
+// ─── LEADS ────────────────────────────────────────────────────────────────────
+
+model Lead {
+  id            String        @id @default(cuid())
+  companyId     String        @unique
+  ownerId       String?
+  status        LeadStatus    @default(NEW)
+  pipelineStage PipelineStage @default(COLD)
+  priority      Int           @default(0)
+  qualifiedAt   DateTime?
+  lostAt        DateTime?
+  wonAt         DateTime?
+  lostReason    String?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  owner          User?           @relation(fields: [ownerId], references: [id])
+  outreachDrafts OutreachDraft[]
+  activities     Activity[]
+  reminders      Reminder[]
+  gmailThreads   GmailThread[]
+  tags           LeadTag[]
+
+  @@index([status, pipelineStage])
+  @@index([ownerId])
+  @@map("leads")
+}
+
+// ─── WEBSITE AUDIT ────────────────────────────────────────────────────────────
+
+model WebsiteAudit {
+  id                  String    @id @default(cuid())
+  companyId           String    @unique
+  url                 String
+  crawledAt           DateTime
+  statusCode          Int?
+  title               String?
+  metaDescription     String?
+  h1                  String?
+  headings            Json? // { h2: string[], h3: string[] }
+  internalLinks       Json? // string[]
+  externalLinks       Json? // string[]
+  techHints           Json? // detected frameworks, CMS, etc.
+  hasMobileMenuSignal Boolean?
+  hasContactForm      Boolean?
+  hasPhoneVisible     Boolean?
+  hasAddressVisible   Boolean?
+  hasGoogleMapsEmbed  Boolean?
+  hasSocialLinks      Boolean?
+  pageCount           Int?
+  wordCount           Int?
+  hasSSL              Boolean?
+  loadSignals         Json? // rough perf signals
+  seoSignals          Json? // title len, h1 count, meta present, etc.
+  summary             String? // AI-generated summary
+  summaryGeneratedAt  DateTime?
+  crawlError          String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("website_audits")
+}
+
+// ─── SCORING ──────────────────────────────────────────────────────────────────
+
+model Score {
+  id                             String           @id @default(cuid())
+  companyId                      String           @unique
+  fitScore                       Int              @default(0)
+  urgencyScore                   Int              @default(0)
+  webGapScore                    Int              @default(0)
+  seoGapScore                    Int              @default(0)
+  contentMaturityScore           Int              @default(0)
+  digitalAiMaturityScore         Int              @default(0)
+  personalizationConfidenceScore Int              @default(0)
+  contactabilityScore            Int              @default(0)
+  reputationSignalScore          Int              @default(0)
+  globalScore                    Int              @default(0)
+  complianceFlags                ComplianceFlag[]
+  requiresHumanReview            Boolean          @default(false)
+  scoredAt                       DateTime         @default(now())
+  updatedAt                      DateTime         @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("scores")
+}
+
+// ─── OUTREACH DRAFTS ──────────────────────────────────────────────────────────
+
+model OutreachDraft {
+  id                  String           @id @default(cuid())
+  leadId              String
+  contactId           String?
+  authorId            String?
+  language            OutreachLanguage
+  angle               OutreachAngle
+  status              OutreachStatus   @default(DRAFT)
+  subject             String
+  body                String
+  followUps           Json? // suggested follow-up sequences
+  complianceFlags     ComplianceFlag[]
+  requiresHumanReview Boolean          @default(false)
+  approvedAt          DateTime?
+  scheduledAt         DateTime?
+  sentAt              DateTime?
+  // AI traceability
+  promptVersion       String?
+  aiProvider          AiProvider?
+  aiModel             String?
+  temperature         Float?
+  inputHash           String?
+  outputSchemaVersion String?
+  evidenceRefs        Json? // links to source IDs used
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  lead    Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  contact Contact? @relation(fields: [contactId], references: [id])
+  author  User?    @relation(fields: [authorId], references: [id])
+
+  @@index([leadId, status])
+  @@map("outreach_drafts")
+}
+
+// ─── GMAIL THREADS ────────────────────────────────────────────────────────────
+
+model GmailThread {
+  id            String    @id @default(cuid())
+  leadId        String
+  gmailThreadId String    @unique
+  subject       String?
+  lastMessageAt DateTime?
+  messageCount  Int       @default(0)
+  hasReply      Boolean   @default(false)
+  lastSyncedAt  DateTime?
+  labels        Json?
+  snippet       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+  @@map("gmail_threads")
+}
+
+// ─── ACTIVITIES ───────────────────────────────────────────────────────────────
+
+model Activity {
+  id        String            @id @default(cuid())
+  leadId    String
+  userId    String?
+  eventType ActivityEventType
+  metadata  Json?
+  createdAt DateTime          @default(now())
+
+  lead Lead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([leadId, eventType])
+  @@map("activities")
+}
+
+// ─── REMINDERS ────────────────────────────────────────────────────────────────
+
+model Reminder {
+  id        String    @id @default(cuid())
+  leadId    String
+  userId    String
+  dueAt     DateTime
+  note      String?
+  done      Boolean   @default(false)
+  doneAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, dueAt])
+  @@map("reminders")
+}
+
+// ─── TAGS ─────────────────────────────────────────────────────────────────────
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String?
+  createdAt DateTime @default(now())
+
+  companies CompanyTag[]
+  leads     LeadTag[]
+
+  @@map("tags")
+}
+
+model CompanyTag {
+  companyId String
+  tagId     String
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([companyId, tagId])
+  @@map("company_tags")
+}
+
+model LeadTag {
+  leadId String
+  tagId  String
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([leadId, tagId])
+  @@map("lead_tags")
+}

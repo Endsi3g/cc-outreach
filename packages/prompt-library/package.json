@@ -1,0 +1,19 @@
+{
+  "name": "@cc-outreach/prompt-library",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@cc-outreach/shared-types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "rimraf": "^5.0.0"
+  }
+}
