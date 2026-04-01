@@ -23,6 +23,10 @@ import { RemindersModule } from './modules/reminders/reminders.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { HealthModule } from './modules/health/health.module';
 import { DatabaseModule } from './modules/database/database.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { SearchModule } from './modules/search/search.module';
+import { FilesModule } from './modules/files/files.module';
+import { ObservabilityModule } from './modules/observability/observability.module';
 
 @Module({
   imports: [
@@ -64,6 +68,10 @@ import { DatabaseModule } from './modules/database/database.module';
     RemindersModule,
     NotificationsModule,
     HealthModule,
+    AnalyticsModule,
+    SearchModule,
+    FilesModule,
+    ObservabilityModule,
   ],
 })
 export class AppModule {}

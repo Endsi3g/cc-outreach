@@ -1,4 +1,4 @@
-# Next Steps — Llama Sales OS Roadmap
+# Next Steps — Uprise Sales OS Roadmap
 
 Ce document détaille les étapes à venir pour finaliser les phases 4 et 5, ainsi que le lancement de la phase 5b (Dashboard).
 
@@ -35,7 +35,7 @@ Ce document détaille les étapes à venir pour finaliser les phases 4 et 5, ain
 
 ### 1. Scaffold & Architecture
 - **Framework** : Next.js 14 (App Router).
-- **Styling** : Vanilla CSS / CSS Modules (Aesthétique premium "Llama").
+- **Styling** : Vanilla CSS / CSS Modules (Aesthétique premium "Uprise").
 - **API Client** : Client typé utilisant les DTOs partagés du monorepo.
 
 ### 2. Pages à développer

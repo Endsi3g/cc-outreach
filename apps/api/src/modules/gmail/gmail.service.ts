@@ -49,7 +49,7 @@ export class GmailService {
     return { email: profile.emailAddress };
   }
 
-  async sendOutreach(userId: string, draftId: string) {
+  async sendOutreach(userId: string, draftId: string): Promise<any> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user || !user.gmailAccessToken) {
       throw new ConflictException('Gmail not connected');

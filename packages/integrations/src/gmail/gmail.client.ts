@@ -1,5 +1,4 @@
-import { google } from 'googleapis';
-import { OAuth2Client } from 'google-auth-library';
+import { google, Auth } from 'googleapis';
 
 export interface GmailConfig {
   clientId: string;
@@ -16,7 +15,7 @@ export interface SendEmailOptions {
 }
 
 export class GmailClient {
-  private readonly oauth2Client: OAuth2Client;
+  private readonly oauth2Client: Auth.OAuth2Client;
 
   constructor(config: GmailConfig) {
     this.oauth2Client = new google.auth.OAuth2(

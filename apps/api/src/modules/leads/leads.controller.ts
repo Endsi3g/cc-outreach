@@ -3,15 +3,15 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiQuery } from '@nestjs/swagger'
 import { AuthGuard } from '@nestjs/passport';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { LeadsService } from './leads.service';
-import { LeadStatus, PipelineStage } from '@cc-outreach/shared-types';
+import { LeadStatus, PipelineStage } from '@cc-outreach/database/src/generated';
 
 class CreateLeadDto {
-  @IsString() companyId: string;
+  @IsString() companyId!: string;
   @IsString() @IsOptional() ownerId?: string;
 }
 
-class ChangeStatusDto { @IsEnum(LeadStatus) status: LeadStatus; }
-class ChangeStageDto { @IsEnum(PipelineStage) stage: PipelineStage; }
+class ChangeStatusDto { @IsEnum(LeadStatus) status!: LeadStatus; }
+class ChangeStageDto { @IsEnum(PipelineStage) stage!: PipelineStage; }
 class MarkLostDto { @IsString() @IsOptional() reason?: string; }
 
 @ApiTags('leads')

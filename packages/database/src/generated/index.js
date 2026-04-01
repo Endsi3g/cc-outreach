@@ -523,7 +523,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\upris\\cc-outreach\\packages\\database\\src\\generated",
+      "value": "C:\\Users\\upris\\uiipohio\\cc-outreach\\packages\\database\\src\\generated",
       "fromEnvVar": null
     },
     "config": {
@@ -537,12 +537,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\upris\\cc-outreach\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\upris\\uiipohio\\cc-outreach\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../../prisma",
   "clientVersion": "5.22.0",

@@ -36,8 +36,8 @@ export class SyncSchedulerService {
       }
 
       this.logger.log(`Queued sync jobs for ${users.length} users.`);
-    } catch (error) {
-      this.logger.error('Failed to schedule Gmail sync jobs', error.stack);
+    } catch (error: any) {
+      this.logger.error('Failed to schedule Gmail sync jobs', error?.stack);
     }
   }
 }

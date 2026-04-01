@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { ActivityEventType } from '@cc-outreach/shared-types';
+import { Prisma, ActivityEventType } from '@cc-outreach/database/src/generated';
 
 @Injectable()
 export class ActivitiesService {
@@ -8,7 +8,12 @@ export class ActivitiesService {
 
   async log(leadId: string, eventType: ActivityEventType, userId?: string, metadata?: Record<string, unknown>) {
     return this.prisma.activity.create({
-      data: { leadId, eventType, userId, metadata: metadata ?? undefined },
+      data: { 
+        leadId, 
+        eventType, 
+        userId, 
+        metadata: (metadata as Prisma.InputJsonValue) ?? Prisma.JsonNull 
+      },
     });
   }
 

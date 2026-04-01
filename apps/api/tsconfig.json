@@ -9,6 +9,7 @@
       "@cc-outreach/shared-dtos": ["../../packages/shared-dtos/src/index.ts"],
       "@cc-outreach/prompt-library": ["../../packages/prompt-library/src/index.ts"],
       "@cc-outreach/integrations": ["../../packages/integrations/src/index.ts"],
+      "@cc-outreach/config": ["../../packages/config/src/index.ts"],
       "@cc-outreach/database/*": ["../../packages/database/*"]
     }
   },

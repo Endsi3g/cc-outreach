@@ -3,10 +3,10 @@ import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { IsString, IsOptional, IsEnum, IsEmail } from 'class-validator';
 import { ContactsService } from './contacts.service';
-import { ContactRole, ContactConfidence, SourceType } from '@cc-outreach/shared-types';
+import { ContactRole, ContactConfidence, SourceType } from '@cc-outreach/database/src/generated';
 
 class CreateContactDto {
-  @IsString() companyId: string;
+  @IsString() companyId!: string;
   @IsString() @IsOptional() firstName?: string;
   @IsString() @IsOptional() lastName?: string;
   @IsString() @IsOptional() fullName?: string;
@@ -14,7 +14,7 @@ class CreateContactDto {
   @IsEmail() @IsOptional() email?: string;
   @IsString() @IsOptional() phone?: string;
   @IsString() @IsOptional() linkedinUrl?: string;
-  @IsEnum(SourceType) source: SourceType;
+  @IsEnum(SourceType) source!: SourceType;
   @IsEnum(ContactConfidence) @IsOptional() confidence?: ContactConfidence;
   @IsString() @IsOptional() notes?: string;
 }

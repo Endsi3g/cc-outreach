@@ -1,6 +1,6 @@
 {
   "name": "cc-outreach",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Plateforme de prospection B2B locale propulsée par IA pour le Québec",
   "scripts": {
@@ -26,6 +26,8 @@
   "devDependencies": {
     "@types/node": "^25.5.0",
     "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "turbo": "^2.9.3"
   },
   "dependencies": {

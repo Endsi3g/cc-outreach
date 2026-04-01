@@ -18,7 +18,7 @@ export class GmailController {
   }
 
   @Post('send/:draftId')
-  async sendOutreach(@Param('draftId') draftId: string, @Request() req: any) {
+  async sendOutreach(@Param('draftId') draftId: string, @Request() req: any): Promise<any> {
     return this.gmailService.sendOutreach(req.user.id, draftId);
   }
 
