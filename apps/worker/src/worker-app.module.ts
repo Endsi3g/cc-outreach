@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { EnrichmentWorkerModule } from './workers/enrichment/enrichment-worker.module';
 import { AuditWorkerModule } from './workers/audit/audit-worker.module';
@@ -21,6 +22,7 @@ import { DatabaseModule } from './database/database.module';
         password: process.env.REDIS_PASSWORD ?? undefined,
       },
     }),
+    ScheduleModule.forRoot(),
     EnrichmentWorkerModule,
     AuditWorkerModule,
     ScoringWorkerModule,

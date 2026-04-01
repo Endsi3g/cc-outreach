@@ -7,8 +7,6 @@ import { envValidationSchema } from '@cc-outreach/config';
 // ── Modules ────────────────────────────────────────────────────────────────
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
-// import { WorkspaceModule } from './modules/workspace/workspace.module';
-// ... Phase 2+ modules commented out for now to avoid build errors ...
 import { LeadsModule } from './modules/leads/leads.module';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
@@ -17,20 +15,13 @@ import { WebsiteAuditModule } from './modules/website-audit/website-audit.module
 import { ScoringModule } from './modules/scoring/scoring.module';
 import { AiModule } from './modules/ai/ai.module';
 import { OutreachModule } from './modules/outreach/outreach.module';
-// import { GmailModule } from './modules/gmail/gmail.module';
-// import { CampaignsModule } from './modules/campaigns/campaigns.module';
-// import { CrmModule } from './modules/crm/crm.module';
+import { GmailModule } from './modules/gmail/gmail.module';
+import { CampaignsModule } from './modules/campaigns/campaigns.module';
+import { CrmModule } from './modules/crm/crm.module';
 import { ActivitiesModule } from './modules/activities/activities.module';
-// import { RemindersModule } from './modules/reminders/reminders.module';
-// import { NotificationsModule } from './modules/notifications/notifications.module';
-// import { AnalyticsModule } from './modules/analytics/analytics.module';
-// import { TagsModule } from './modules/tags/tags.module';
-// import { SearchModule } from './modules/search/search.module';
-// import { FilesModule } from './modules/files/files.module';
-// import { JobsModule } from './modules/jobs/jobs.module';
-// import { ComplianceModule } from './modules/compliance/compliance.module';
+import { RemindersModule } from './modules/reminders/reminders.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { HealthModule } from './modules/health/health.module';
-// import { ObservabilityModule } from './modules/observability/observability.module';
 import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
@@ -58,30 +49,21 @@ import { DatabaseModule } from './modules/database/database.module';
     DatabaseModule,
     AuthModule,
     UsersModule,
-    // WorkspaceModule,
     LeadsModule,
     CompaniesModule,
     ContactsModule,
-    // SourcesModule,
     EnrichmentModule,
     WebsiteAuditModule,
     ScoringModule,
     AiModule,
     OutreachModule,
-    // GmailModule,
-    // CampaignsModule,
-    // CrmModule,
+    GmailModule,
+    CampaignsModule,
+    CrmModule,
     ActivitiesModule,
-    // RemindersModule,
-    // NotificationsModule,
-    // AnalyticsModule,
-    // TagsModule,
-    // SearchModule,
-    // FilesModule,
-    // JobsModule,
-    // ComplianceModule,
+    RemindersModule,
+    NotificationsModule,
     HealthModule,
-    // ObservabilityModule,
   ],
 })
 export class AppModule {}
