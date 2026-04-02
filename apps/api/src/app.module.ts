@@ -27,6 +27,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { SearchModule } from './modules/search/search.module';
 import { FilesModule } from './modules/files/files.module';
 import { ObservabilityModule } from './modules/observability/observability.module';
+import { RealtimeModule } from './modules/realtime/realtime.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { ObservabilityModule } from './modules/observability/observability.modul
     SearchModule,
     FilesModule,
     ObservabilityModule,
+    RealtimeModule,
   ],
 })
 export class AppModule {}

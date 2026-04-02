@@ -10,9 +10,9 @@ export class EnrichmentService {
     @InjectQueue('enrichment.company') private readonly enrichmentQueue: Queue,
   ) {}
 
-  async triggerEnrichment(companyId: string) {
-    this.logger.log(`Queueing enrichment for company: ${companyId}`);
-    await this.enrichmentQueue.add({ companyId }, {
+  async triggerEnrichment(workspaceId: string, companyId: string) {
+    this.logger.log(`Queueing enrichment for company: ${companyId} in workspace: ${workspaceId}`);
+    await this.enrichmentQueue.add({ workspaceId, companyId }, {
       attempts: 3,
       backoff: { type: 'exponential', delay: 5000 },
       removeOnComplete: true,

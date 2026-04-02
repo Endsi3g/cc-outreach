@@ -149,6 +149,15 @@ exports.Prisma.WorkspaceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.WorkspaceMemberScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  role: 'role',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -179,6 +188,7 @@ exports.Prisma.CompanyScalarFieldEnum = {
   yearFounded: 'yearFounded',
   employeeCount: 'employeeCount',
   isActive: 'isActive',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -227,6 +237,7 @@ exports.Prisma.LeadScalarFieldEnum = {
   wonAt: 'wonAt',
   lostReason: 'lostReason',
   notes: 'notes',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -258,6 +269,7 @@ exports.Prisma.WebsiteAuditScalarFieldEnum = {
   summary: 'summary',
   summaryGeneratedAt: 'summaryGeneratedAt',
   crawlError: 'crawlError',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -277,6 +289,7 @@ exports.Prisma.ScoreScalarFieldEnum = {
   globalScore: 'globalScore',
   complianceFlags: 'complianceFlags',
   requiresHumanReview: 'requiresHumanReview',
+  workspaceId: 'workspaceId',
   scoredAt: 'scoredAt',
   updatedAt: 'updatedAt'
 };
@@ -304,6 +317,7 @@ exports.Prisma.OutreachDraftScalarFieldEnum = {
   inputHash: 'inputHash',
   outputSchemaVersion: 'outputSchemaVersion',
   evidenceRefs: 'evidenceRefs',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -319,6 +333,7 @@ exports.Prisma.GmailThreadScalarFieldEnum = {
   lastSyncedAt: 'lastSyncedAt',
   labels: 'labels',
   snippet: 'snippet',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -329,6 +344,7 @@ exports.Prisma.ActivityScalarFieldEnum = {
   userId: 'userId',
   eventType: 'eventType',
   metadata: 'metadata',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt'
 };
 
@@ -340,6 +356,7 @@ exports.Prisma.ReminderScalarFieldEnum = {
   note: 'note',
   done: 'done',
   doneAt: 'doneAt',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt'
 };
 
@@ -347,6 +364,7 @@ exports.Prisma.TagScalarFieldEnum = {
   id: 'id',
   name: 'name',
   color: 'color',
+  workspaceId: 'workspaceId',
   createdAt: 'createdAt'
 };
 
@@ -389,6 +407,12 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.WorkspaceRole = exports.$Enums.WorkspaceRole = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  MEMBER: 'MEMBER'
+};
+
 exports.CompanyNiche = exports.$Enums.CompanyNiche = {
   CONSTRUCTION: 'CONSTRUCTION',
   TOITURE: 'TOITURE',
@@ -529,6 +553,7 @@ exports.ActivityEventType = exports.$Enums.ActivityEventType = {
 exports.Prisma.ModelName = {
   User: 'User',
   Workspace: 'Workspace',
+  WorkspaceMember: 'WorkspaceMember',
   Company: 'Company',
   Contact: 'Contact',
   Source: 'Source',

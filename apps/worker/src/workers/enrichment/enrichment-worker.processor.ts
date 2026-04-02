@@ -18,12 +18,13 @@ export class EnrichmentWorkerProcessor {
   constructor(private readonly prisma: PrismaService) {}
 
   @Process()
-  async handle(job: Job<{ companyId: string }>) {
-    this.logger.log(`[enrichment.company] Traitement companyId=${job.data.companyId}`);
+  async handle(job: Job<{ workspaceId: string; companyId: string }>) {
+    const { workspaceId, companyId } = job.data;
+    this.logger.log(`[enrichment.company] Traitement workspaceId=${workspaceId} companyId=${companyId}`);
     
     // 1. Fetch Company
     const company = await this.prisma.company.findUnique({
-      where: { id: job.data.companyId }
+      where: { id: companyId, workspaceId }
     });
 
     if (!company) {
@@ -59,7 +60,8 @@ export class EnrichmentWorkerProcessor {
           url: bestMatch.website || bestMatch.url || '',
           data: bestMatch,
           payloadHash,
-          companyId: company.id
+          companyId: company.id,
+          workspaceId,
         }
       });
 

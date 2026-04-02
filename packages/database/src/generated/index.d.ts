@@ -24,6 +24,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Workspace = $Result.DefaultSelection<Prisma.$WorkspacePayload>
 /**
+ * Model WorkspaceMember
+ * 
+ */
+export type WorkspaceMember = $Result.DefaultSelection<Prisma.$WorkspaceMemberPayload>
+/**
  * Model Company
  * 
  */
@@ -93,7 +98,16 @@ export type LeadTag = $Result.DefaultSelection<Prisma.$LeadTagPayload>
  * Enums
  */
 export namespace $Enums {
-  export const CompanyNiche: {
+  export const WorkspaceRole: {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  MEMBER: 'MEMBER'
+};
+
+export type WorkspaceRole = (typeof WorkspaceRole)[keyof typeof WorkspaceRole]
+
+
+export const CompanyNiche: {
   CONSTRUCTION: 'CONSTRUCTION',
   TOITURE: 'TOITURE',
   EXCAVATION: 'EXCAVATION',
@@ -269,6 +283,10 @@ export const ActivityEventType: {
 export type ActivityEventType = (typeof ActivityEventType)[keyof typeof ActivityEventType]
 
 }
+
+export type WorkspaceRole = $Enums.WorkspaceRole
+
+export const WorkspaceRole: typeof $Enums.WorkspaceRole
 
 export type CompanyNiche = $Enums.CompanyNiche
 
@@ -464,6 +482,16 @@ export class PrismaClient<
     * ```
     */
   get workspace(): Prisma.WorkspaceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.workspaceMember`: Exposes CRUD operations for the **WorkspaceMember** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WorkspaceMembers
+    * const workspaceMembers = await prisma.workspaceMember.findMany()
+    * ```
+    */
+  get workspaceMember(): Prisma.WorkspaceMemberDelegate<ExtArgs>;
 
   /**
    * `prisma.company`: Exposes CRUD operations for the **Company** model.
@@ -1037,6 +1065,7 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Workspace: 'Workspace',
+    WorkspaceMember: 'WorkspaceMember',
     Company: 'Company',
     Contact: 'Contact',
     Source: 'Source',
@@ -1065,7 +1094,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "workspace" | "company" | "contact" | "source" | "lead" | "websiteAudit" | "score" | "outreachDraft" | "gmailThread" | "activity" | "reminder" | "tag" | "companyTag" | "leadTag"
+      modelProps: "user" | "workspace" | "workspaceMember" | "company" | "contact" | "source" | "lead" | "websiteAudit" | "score" | "outreachDraft" | "gmailThread" | "activity" | "reminder" | "tag" | "companyTag" | "leadTag"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1206,6 +1235,76 @@ export namespace Prisma {
           count: {
             args: Prisma.WorkspaceCountArgs<ExtArgs>
             result: $Utils.Optional<WorkspaceCountAggregateOutputType> | number
+          }
+        }
+      }
+      WorkspaceMember: {
+        payload: Prisma.$WorkspaceMemberPayload<ExtArgs>
+        fields: Prisma.WorkspaceMemberFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WorkspaceMemberFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WorkspaceMemberFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload>
+          }
+          findFirst: {
+            args: Prisma.WorkspaceMemberFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WorkspaceMemberFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload>
+          }
+          findMany: {
+            args: Prisma.WorkspaceMemberFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload>[]
+          }
+          create: {
+            args: Prisma.WorkspaceMemberCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload>
+          }
+          createMany: {
+            args: Prisma.WorkspaceMemberCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WorkspaceMemberCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload>[]
+          }
+          delete: {
+            args: Prisma.WorkspaceMemberDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload>
+          }
+          update: {
+            args: Prisma.WorkspaceMemberUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload>
+          }
+          deleteMany: {
+            args: Prisma.WorkspaceMemberDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WorkspaceMemberUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.WorkspaceMemberUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WorkspaceMemberPayload>
+          }
+          aggregate: {
+            args: Prisma.WorkspaceMemberAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWorkspaceMember>
+          }
+          groupBy: {
+            args: Prisma.WorkspaceMemberGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceMemberGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WorkspaceMemberCountArgs<ExtArgs>
+            result: $Utils.Optional<WorkspaceMemberCountAggregateOutputType> | number
           }
         }
       }
@@ -2280,6 +2379,7 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
+    members: number
     leads: number
     activities: number
     reminders: number
@@ -2287,6 +2387,7 @@ export namespace Prisma {
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    members?: boolean | UserCountOutputTypeCountMembersArgs
     leads?: boolean | UserCountOutputTypeCountLeadsArgs
     activities?: boolean | UserCountOutputTypeCountActivitiesArgs
     reminders?: boolean | UserCountOutputTypeCountRemindersArgs
@@ -2302,6 +2403,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the UserCountOutputType
      */
     select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceMemberWhereInput
   }
 
   /**
@@ -2330,6 +2438,64 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountOutreachDraftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OutreachDraftWhereInput
+  }
+
+
+  /**
+   * Count Type WorkspaceCountOutputType
+   */
+
+  export type WorkspaceCountOutputType = {
+    members: number
+    leads: number
+    companies: number
+    tags: number
+  }
+
+  export type WorkspaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    members?: boolean | WorkspaceCountOutputTypeCountMembersArgs
+    leads?: boolean | WorkspaceCountOutputTypeCountLeadsArgs
+    companies?: boolean | WorkspaceCountOutputTypeCountCompaniesArgs
+    tags?: boolean | WorkspaceCountOutputTypeCountTagsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceCountOutputType
+     */
+    select?: WorkspaceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceMemberWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountLeadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountCompaniesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CompanyWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TagWhereInput
   }
 
 
@@ -2768,6 +2934,7 @@ export namespace Prisma {
     gmailEmail?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    members?: boolean | User$membersArgs<ExtArgs>
     leads?: boolean | User$leadsArgs<ExtArgs>
     activities?: boolean | User$activitiesArgs<ExtArgs>
     reminders?: boolean | User$remindersArgs<ExtArgs>
@@ -2812,6 +2979,7 @@ export namespace Prisma {
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    members?: boolean | User$membersArgs<ExtArgs>
     leads?: boolean | User$leadsArgs<ExtArgs>
     activities?: boolean | User$activitiesArgs<ExtArgs>
     reminders?: boolean | User$remindersArgs<ExtArgs>
@@ -2823,6 +2991,7 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
+      members: Prisma.$WorkspaceMemberPayload<ExtArgs>[]
       leads: Prisma.$LeadPayload<ExtArgs>[]
       activities: Prisma.$ActivityPayload<ExtArgs>[]
       reminders: Prisma.$ReminderPayload<ExtArgs>[]
@@ -3208,6 +3377,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    members<T extends User$membersArgs<ExtArgs> = {}>(args?: Subset<T, User$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findMany"> | Null>
     leads<T extends User$leadsArgs<ExtArgs> = {}>(args?: Subset<T, User$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany"> | Null>
     activities<T extends User$activitiesArgs<ExtArgs> = {}>(args?: Subset<T, User$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany"> | Null>
     reminders<T extends User$remindersArgs<ExtArgs> = {}>(args?: Subset<T, User$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany"> | Null>
@@ -3570,6 +3740,26 @@ export namespace Prisma {
   }
 
   /**
+   * User.members
+   */
+  export type User$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    where?: WorkspaceMemberWhereInput
+    orderBy?: WorkspaceMemberOrderByWithRelationInput | WorkspaceMemberOrderByWithRelationInput[]
+    cursor?: WorkspaceMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
    * User.leads
    */
   export type User$leadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3832,6 +4022,11 @@ export namespace Prisma {
     settings?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    members?: boolean | Workspace$membersArgs<ExtArgs>
+    leads?: boolean | Workspace$leadsArgs<ExtArgs>
+    companies?: boolean | Workspace$companiesArgs<ExtArgs>
+    tags?: boolean | Workspace$tagsArgs<ExtArgs>
+    _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workspace"]>
 
   export type WorkspaceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3852,10 +4047,23 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
+  export type WorkspaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    members?: boolean | Workspace$membersArgs<ExtArgs>
+    leads?: boolean | Workspace$leadsArgs<ExtArgs>
+    companies?: boolean | Workspace$companiesArgs<ExtArgs>
+    tags?: boolean | Workspace$tagsArgs<ExtArgs>
+    _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $WorkspacePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Workspace"
-    objects: {}
+    objects: {
+      members: Prisma.$WorkspaceMemberPayload<ExtArgs>[]
+      leads: Prisma.$LeadPayload<ExtArgs>[]
+      companies: Prisma.$CompanyPayload<ExtArgs>[]
+      tags: Prisma.$TagPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
@@ -4227,6 +4435,10 @@ export namespace Prisma {
    */
   export interface Prisma__WorkspaceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    members<T extends Workspace$membersArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findMany"> | Null>
+    leads<T extends Workspace$leadsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany"> | Null>
+    companies<T extends Workspace$companiesArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$companiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findMany"> | Null>
+    tags<T extends Workspace$tagsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4275,6 +4487,10 @@ export namespace Prisma {
      */
     select?: WorkspaceSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
+    /**
      * Filter, which Workspace to fetch.
      */
     where: WorkspaceWhereUniqueInput
@@ -4289,6 +4505,10 @@ export namespace Prisma {
      */
     select?: WorkspaceSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
+    /**
      * Filter, which Workspace to fetch.
      */
     where: WorkspaceWhereUniqueInput
@@ -4302,6 +4522,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Workspace
      */
     select?: WorkspaceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
     /**
      * Filter, which Workspace to fetch.
      */
@@ -4347,6 +4571,10 @@ export namespace Prisma {
      */
     select?: WorkspaceSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
+    /**
      * Filter, which Workspace to fetch.
      */
     where?: WorkspaceWhereInput
@@ -4391,6 +4619,10 @@ export namespace Prisma {
      */
     select?: WorkspaceSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
+    /**
      * Filter, which Workspaces to fetch.
      */
     where?: WorkspaceWhereInput
@@ -4429,6 +4661,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the Workspace
      */
     select?: WorkspaceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
     /**
      * The data needed to create a Workspace.
      */
@@ -4470,6 +4706,10 @@ export namespace Prisma {
      */
     select?: WorkspaceSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
+    /**
      * The data needed to update a Workspace.
      */
     data: XOR<WorkspaceUpdateInput, WorkspaceUncheckedUpdateInput>
@@ -4502,6 +4742,10 @@ export namespace Prisma {
      */
     select?: WorkspaceSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
+    /**
      * The filter to search for the Workspace to update in case it exists.
      */
     where: WorkspaceWhereUniqueInput
@@ -4524,6 +4768,10 @@ export namespace Prisma {
      */
     select?: WorkspaceSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
+    /**
      * Filter which Workspace to delete.
      */
     where: WorkspaceWhereUniqueInput
@@ -4540,6 +4788,86 @@ export namespace Prisma {
   }
 
   /**
+   * Workspace.members
+   */
+  export type Workspace$membersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    where?: WorkspaceMemberWhereInput
+    orderBy?: WorkspaceMemberOrderByWithRelationInput | WorkspaceMemberOrderByWithRelationInput[]
+    cursor?: WorkspaceMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.leads
+   */
+  export type Workspace$leadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lead
+     */
+    select?: LeadSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadInclude<ExtArgs> | null
+    where?: LeadWhereInput
+    orderBy?: LeadOrderByWithRelationInput | LeadOrderByWithRelationInput[]
+    cursor?: LeadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadScalarFieldEnum | LeadScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.companies
+   */
+  export type Workspace$companiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Company
+     */
+    select?: CompanySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyInclude<ExtArgs> | null
+    where?: CompanyWhereInput
+    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
+    cursor?: CompanyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.tags
+   */
+  export type Workspace$tagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    where?: TagWhereInput
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    cursor?: TagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
    * Workspace without action
    */
   export type WorkspaceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4547,6 +4875,961 @@ export namespace Prisma {
      * Select specific fields to fetch from the Workspace
      */
     select?: WorkspaceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WorkspaceMember
+   */
+
+  export type AggregateWorkspaceMember = {
+    _count: WorkspaceMemberCountAggregateOutputType | null
+    _min: WorkspaceMemberMinAggregateOutputType | null
+    _max: WorkspaceMemberMaxAggregateOutputType | null
+  }
+
+  export type WorkspaceMemberMinAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    userId: string | null
+    role: $Enums.WorkspaceRole | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WorkspaceMemberMaxAggregateOutputType = {
+    id: string | null
+    workspaceId: string | null
+    userId: string | null
+    role: $Enums.WorkspaceRole | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WorkspaceMemberCountAggregateOutputType = {
+    id: number
+    workspaceId: number
+    userId: number
+    role: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WorkspaceMemberMinAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    userId?: true
+    role?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WorkspaceMemberMaxAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    userId?: true
+    role?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WorkspaceMemberCountAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    userId?: true
+    role?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WorkspaceMemberAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceMember to aggregate.
+     */
+    where?: WorkspaceMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceMembers to fetch.
+     */
+    orderBy?: WorkspaceMemberOrderByWithRelationInput | WorkspaceMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WorkspaceMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WorkspaceMembers
+    **/
+    _count?: true | WorkspaceMemberCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WorkspaceMemberMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WorkspaceMemberMaxAggregateInputType
+  }
+
+  export type GetWorkspaceMemberAggregateType<T extends WorkspaceMemberAggregateArgs> = {
+        [P in keyof T & keyof AggregateWorkspaceMember]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWorkspaceMember[P]>
+      : GetScalarType<T[P], AggregateWorkspaceMember[P]>
+  }
+
+
+
+
+  export type WorkspaceMemberGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WorkspaceMemberWhereInput
+    orderBy?: WorkspaceMemberOrderByWithAggregationInput | WorkspaceMemberOrderByWithAggregationInput[]
+    by: WorkspaceMemberScalarFieldEnum[] | WorkspaceMemberScalarFieldEnum
+    having?: WorkspaceMemberScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WorkspaceMemberCountAggregateInputType | true
+    _min?: WorkspaceMemberMinAggregateInputType
+    _max?: WorkspaceMemberMaxAggregateInputType
+  }
+
+  export type WorkspaceMemberGroupByOutputType = {
+    id: string
+    workspaceId: string
+    userId: string
+    role: $Enums.WorkspaceRole
+    createdAt: Date
+    updatedAt: Date
+    _count: WorkspaceMemberCountAggregateOutputType | null
+    _min: WorkspaceMemberMinAggregateOutputType | null
+    _max: WorkspaceMemberMaxAggregateOutputType | null
+  }
+
+  type GetWorkspaceMemberGroupByPayload<T extends WorkspaceMemberGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WorkspaceMemberGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WorkspaceMemberGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WorkspaceMemberGroupByOutputType[P]>
+            : GetScalarType<T[P], WorkspaceMemberGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WorkspaceMemberSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    userId?: boolean
+    role?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceMember"]>
+
+  export type WorkspaceMemberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    workspaceId?: boolean
+    userId?: boolean
+    role?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["workspaceMember"]>
+
+  export type WorkspaceMemberSelectScalar = {
+    id?: boolean
+    workspaceId?: boolean
+    userId?: boolean
+    role?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WorkspaceMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type WorkspaceMemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $WorkspaceMemberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WorkspaceMember"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      workspaceId: string
+      userId: string
+      role: $Enums.WorkspaceRole
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["workspaceMember"]>
+    composites: {}
+  }
+
+  type WorkspaceMemberGetPayload<S extends boolean | null | undefined | WorkspaceMemberDefaultArgs> = $Result.GetResult<Prisma.$WorkspaceMemberPayload, S>
+
+  type WorkspaceMemberCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<WorkspaceMemberFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: WorkspaceMemberCountAggregateInputType | true
+    }
+
+  export interface WorkspaceMemberDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WorkspaceMember'], meta: { name: 'WorkspaceMember' } }
+    /**
+     * Find zero or one WorkspaceMember that matches the filter.
+     * @param {WorkspaceMemberFindUniqueArgs} args - Arguments to find a WorkspaceMember
+     * @example
+     * // Get one WorkspaceMember
+     * const workspaceMember = await prisma.workspaceMember.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WorkspaceMemberFindUniqueArgs>(args: SelectSubset<T, WorkspaceMemberFindUniqueArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one WorkspaceMember that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {WorkspaceMemberFindUniqueOrThrowArgs} args - Arguments to find a WorkspaceMember
+     * @example
+     * // Get one WorkspaceMember
+     * const workspaceMember = await prisma.workspaceMember.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WorkspaceMemberFindUniqueOrThrowArgs>(args: SelectSubset<T, WorkspaceMemberFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first WorkspaceMember that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceMemberFindFirstArgs} args - Arguments to find a WorkspaceMember
+     * @example
+     * // Get one WorkspaceMember
+     * const workspaceMember = await prisma.workspaceMember.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WorkspaceMemberFindFirstArgs>(args?: SelectSubset<T, WorkspaceMemberFindFirstArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first WorkspaceMember that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceMemberFindFirstOrThrowArgs} args - Arguments to find a WorkspaceMember
+     * @example
+     * // Get one WorkspaceMember
+     * const workspaceMember = await prisma.workspaceMember.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WorkspaceMemberFindFirstOrThrowArgs>(args?: SelectSubset<T, WorkspaceMemberFindFirstOrThrowArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more WorkspaceMembers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceMemberFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WorkspaceMembers
+     * const workspaceMembers = await prisma.workspaceMember.findMany()
+     * 
+     * // Get first 10 WorkspaceMembers
+     * const workspaceMembers = await prisma.workspaceMember.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const workspaceMemberWithIdOnly = await prisma.workspaceMember.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WorkspaceMemberFindManyArgs>(args?: SelectSubset<T, WorkspaceMemberFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a WorkspaceMember.
+     * @param {WorkspaceMemberCreateArgs} args - Arguments to create a WorkspaceMember.
+     * @example
+     * // Create one WorkspaceMember
+     * const WorkspaceMember = await prisma.workspaceMember.create({
+     *   data: {
+     *     // ... data to create a WorkspaceMember
+     *   }
+     * })
+     * 
+     */
+    create<T extends WorkspaceMemberCreateArgs>(args: SelectSubset<T, WorkspaceMemberCreateArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many WorkspaceMembers.
+     * @param {WorkspaceMemberCreateManyArgs} args - Arguments to create many WorkspaceMembers.
+     * @example
+     * // Create many WorkspaceMembers
+     * const workspaceMember = await prisma.workspaceMember.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WorkspaceMemberCreateManyArgs>(args?: SelectSubset<T, WorkspaceMemberCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WorkspaceMembers and returns the data saved in the database.
+     * @param {WorkspaceMemberCreateManyAndReturnArgs} args - Arguments to create many WorkspaceMembers.
+     * @example
+     * // Create many WorkspaceMembers
+     * const workspaceMember = await prisma.workspaceMember.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WorkspaceMembers and only return the `id`
+     * const workspaceMemberWithIdOnly = await prisma.workspaceMember.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WorkspaceMemberCreateManyAndReturnArgs>(args?: SelectSubset<T, WorkspaceMemberCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a WorkspaceMember.
+     * @param {WorkspaceMemberDeleteArgs} args - Arguments to delete one WorkspaceMember.
+     * @example
+     * // Delete one WorkspaceMember
+     * const WorkspaceMember = await prisma.workspaceMember.delete({
+     *   where: {
+     *     // ... filter to delete one WorkspaceMember
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WorkspaceMemberDeleteArgs>(args: SelectSubset<T, WorkspaceMemberDeleteArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one WorkspaceMember.
+     * @param {WorkspaceMemberUpdateArgs} args - Arguments to update one WorkspaceMember.
+     * @example
+     * // Update one WorkspaceMember
+     * const workspaceMember = await prisma.workspaceMember.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WorkspaceMemberUpdateArgs>(args: SelectSubset<T, WorkspaceMemberUpdateArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more WorkspaceMembers.
+     * @param {WorkspaceMemberDeleteManyArgs} args - Arguments to filter WorkspaceMembers to delete.
+     * @example
+     * // Delete a few WorkspaceMembers
+     * const { count } = await prisma.workspaceMember.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WorkspaceMemberDeleteManyArgs>(args?: SelectSubset<T, WorkspaceMemberDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WorkspaceMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceMemberUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WorkspaceMembers
+     * const workspaceMember = await prisma.workspaceMember.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WorkspaceMemberUpdateManyArgs>(args: SelectSubset<T, WorkspaceMemberUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one WorkspaceMember.
+     * @param {WorkspaceMemberUpsertArgs} args - Arguments to update or create a WorkspaceMember.
+     * @example
+     * // Update or create a WorkspaceMember
+     * const workspaceMember = await prisma.workspaceMember.upsert({
+     *   create: {
+     *     // ... data to create a WorkspaceMember
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WorkspaceMember we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WorkspaceMemberUpsertArgs>(args: SelectSubset<T, WorkspaceMemberUpsertArgs<ExtArgs>>): Prisma__WorkspaceMemberClient<$Result.GetResult<Prisma.$WorkspaceMemberPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of WorkspaceMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceMemberCountArgs} args - Arguments to filter WorkspaceMembers to count.
+     * @example
+     * // Count the number of WorkspaceMembers
+     * const count = await prisma.workspaceMember.count({
+     *   where: {
+     *     // ... the filter for the WorkspaceMembers we want to count
+     *   }
+     * })
+    **/
+    count<T extends WorkspaceMemberCountArgs>(
+      args?: Subset<T, WorkspaceMemberCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WorkspaceMemberCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WorkspaceMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceMemberAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WorkspaceMemberAggregateArgs>(args: Subset<T, WorkspaceMemberAggregateArgs>): Prisma.PrismaPromise<GetWorkspaceMemberAggregateType<T>>
+
+    /**
+     * Group by WorkspaceMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WorkspaceMemberGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WorkspaceMemberGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WorkspaceMemberGroupByArgs['orderBy'] }
+        : { orderBy?: WorkspaceMemberGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WorkspaceMemberGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWorkspaceMemberGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WorkspaceMember model
+   */
+  readonly fields: WorkspaceMemberFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WorkspaceMember.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WorkspaceMemberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WorkspaceMember model
+   */ 
+  interface WorkspaceMemberFieldRefs {
+    readonly id: FieldRef<"WorkspaceMember", 'String'>
+    readonly workspaceId: FieldRef<"WorkspaceMember", 'String'>
+    readonly userId: FieldRef<"WorkspaceMember", 'String'>
+    readonly role: FieldRef<"WorkspaceMember", 'WorkspaceRole'>
+    readonly createdAt: FieldRef<"WorkspaceMember", 'DateTime'>
+    readonly updatedAt: FieldRef<"WorkspaceMember", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WorkspaceMember findUnique
+   */
+  export type WorkspaceMemberFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceMember to fetch.
+     */
+    where: WorkspaceMemberWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceMember findUniqueOrThrow
+   */
+  export type WorkspaceMemberFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceMember to fetch.
+     */
+    where: WorkspaceMemberWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceMember findFirst
+   */
+  export type WorkspaceMemberFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceMember to fetch.
+     */
+    where?: WorkspaceMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceMembers to fetch.
+     */
+    orderBy?: WorkspaceMemberOrderByWithRelationInput | WorkspaceMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceMembers.
+     */
+    cursor?: WorkspaceMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceMembers.
+     */
+    distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceMember findFirstOrThrow
+   */
+  export type WorkspaceMemberFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceMember to fetch.
+     */
+    where?: WorkspaceMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceMembers to fetch.
+     */
+    orderBy?: WorkspaceMemberOrderByWithRelationInput | WorkspaceMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WorkspaceMembers.
+     */
+    cursor?: WorkspaceMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WorkspaceMembers.
+     */
+    distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceMember findMany
+   */
+  export type WorkspaceMemberFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which WorkspaceMembers to fetch.
+     */
+    where?: WorkspaceMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WorkspaceMembers to fetch.
+     */
+    orderBy?: WorkspaceMemberOrderByWithRelationInput | WorkspaceMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WorkspaceMembers.
+     */
+    cursor?: WorkspaceMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WorkspaceMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WorkspaceMembers.
+     */
+    skip?: number
+    distinct?: WorkspaceMemberScalarFieldEnum | WorkspaceMemberScalarFieldEnum[]
+  }
+
+  /**
+   * WorkspaceMember create
+   */
+  export type WorkspaceMemberCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WorkspaceMember.
+     */
+    data: XOR<WorkspaceMemberCreateInput, WorkspaceMemberUncheckedCreateInput>
+  }
+
+  /**
+   * WorkspaceMember createMany
+   */
+  export type WorkspaceMemberCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WorkspaceMembers.
+     */
+    data: WorkspaceMemberCreateManyInput | WorkspaceMemberCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WorkspaceMember createManyAndReturn
+   */
+  export type WorkspaceMemberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many WorkspaceMembers.
+     */
+    data: WorkspaceMemberCreateManyInput | WorkspaceMemberCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WorkspaceMember update
+   */
+  export type WorkspaceMemberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WorkspaceMember.
+     */
+    data: XOR<WorkspaceMemberUpdateInput, WorkspaceMemberUncheckedUpdateInput>
+    /**
+     * Choose, which WorkspaceMember to update.
+     */
+    where: WorkspaceMemberWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceMember updateMany
+   */
+  export type WorkspaceMemberUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WorkspaceMembers.
+     */
+    data: XOR<WorkspaceMemberUpdateManyMutationInput, WorkspaceMemberUncheckedUpdateManyInput>
+    /**
+     * Filter which WorkspaceMembers to update
+     */
+    where?: WorkspaceMemberWhereInput
+  }
+
+  /**
+   * WorkspaceMember upsert
+   */
+  export type WorkspaceMemberUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WorkspaceMember to update in case it exists.
+     */
+    where: WorkspaceMemberWhereUniqueInput
+    /**
+     * In case the WorkspaceMember found by the `where` argument doesn't exist, create a new WorkspaceMember with this data.
+     */
+    create: XOR<WorkspaceMemberCreateInput, WorkspaceMemberUncheckedCreateInput>
+    /**
+     * In case the WorkspaceMember was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WorkspaceMemberUpdateInput, WorkspaceMemberUncheckedUpdateInput>
+  }
+
+  /**
+   * WorkspaceMember delete
+   */
+  export type WorkspaceMemberDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
+    /**
+     * Filter which WorkspaceMember to delete.
+     */
+    where: WorkspaceMemberWhereUniqueInput
+  }
+
+  /**
+   * WorkspaceMember deleteMany
+   */
+  export type WorkspaceMemberDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WorkspaceMembers to delete
+     */
+    where?: WorkspaceMemberWhereInput
+  }
+
+  /**
+   * WorkspaceMember without action
+   */
+  export type WorkspaceMemberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkspaceMember
+     */
+    select?: WorkspaceMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WorkspaceMemberInclude<ExtArgs> | null
   }
 
 
@@ -4603,6 +5886,7 @@ export namespace Prisma {
     yearFounded: number | null
     employeeCount: string | null
     isActive: boolean | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4636,6 +5920,7 @@ export namespace Prisma {
     yearFounded: number | null
     employeeCount: string | null
     isActive: boolean | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4670,6 +5955,7 @@ export namespace Prisma {
     yearFounded: number
     employeeCount: number
     isActive: number
+    workspaceId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4717,6 +6003,7 @@ export namespace Prisma {
     yearFounded?: true
     employeeCount?: true
     isActive?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4750,6 +6037,7 @@ export namespace Prisma {
     yearFounded?: true
     employeeCount?: true
     isActive?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4784,6 +6072,7 @@ export namespace Prisma {
     yearFounded?: true
     employeeCount?: true
     isActive?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4905,6 +6194,7 @@ export namespace Prisma {
     yearFounded: number | null
     employeeCount: string | null
     isActive: boolean
+    workspaceId: string
     createdAt: Date
     updatedAt: Date
     _count: CompanyCountAggregateOutputType | null
@@ -4958,8 +6248,10 @@ export namespace Prisma {
     yearFounded?: boolean
     employeeCount?: boolean
     isActive?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     contacts?: boolean | Company$contactsArgs<ExtArgs>
     sources?: boolean | Company$sourcesArgs<ExtArgs>
     lead?: boolean | Company$leadArgs<ExtArgs>
@@ -4999,8 +6291,10 @@ export namespace Prisma {
     yearFounded?: boolean
     employeeCount?: boolean
     isActive?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectScalar = {
@@ -5033,11 +6327,13 @@ export namespace Prisma {
     yearFounded?: boolean
     employeeCount?: boolean
     isActive?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     contacts?: boolean | Company$contactsArgs<ExtArgs>
     sources?: boolean | Company$sourcesArgs<ExtArgs>
     lead?: boolean | Company$leadArgs<ExtArgs>
@@ -5046,11 +6342,14 @@ export namespace Prisma {
     tags?: boolean | Company$tagsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
 
   export type $CompanyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Company"
     objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
       contacts: Prisma.$ContactPayload<ExtArgs>[]
       sources: Prisma.$SourcePayload<ExtArgs>[]
       lead: Prisma.$LeadPayload<ExtArgs> | null
@@ -5088,6 +6387,7 @@ export namespace Prisma {
       yearFounded: number | null
       employeeCount: string | null
       isActive: boolean
+      workspaceId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["company"]>
@@ -5454,6 +6754,7 @@ export namespace Prisma {
    */
   export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     contacts<T extends Company$contactsArgs<ExtArgs> = {}>(args?: Subset<T, Company$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany"> | Null>
     sources<T extends Company$sourcesArgs<ExtArgs> = {}>(args?: Subset<T, Company$sourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SourcePayload<ExtArgs>, T, "findMany"> | Null>
     lead<T extends Company$leadArgs<ExtArgs> = {}>(args?: Subset<T, Company$leadArgs<ExtArgs>>): Prisma__LeadClient<$Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
@@ -5518,6 +6819,7 @@ export namespace Prisma {
     readonly yearFounded: FieldRef<"Company", 'Int'>
     readonly employeeCount: FieldRef<"Company", 'String'>
     readonly isActive: FieldRef<"Company", 'Boolean'>
+    readonly workspaceId: FieldRef<"Company", 'String'>
     readonly createdAt: FieldRef<"Company", 'DateTime'>
     readonly updatedAt: FieldRef<"Company", 'DateTime'>
   }
@@ -5741,6 +7043,10 @@ export namespace Prisma {
      */
     data: CompanyCreateManyInput | CompanyCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompanyIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -8095,6 +9401,7 @@ export namespace Prisma {
     wonAt: Date | null
     lostReason: string | null
     notes: string | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8111,6 +9418,7 @@ export namespace Prisma {
     wonAt: Date | null
     lostReason: string | null
     notes: string | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8127,6 +9435,7 @@ export namespace Prisma {
     wonAt: number
     lostReason: number
     notes: number
+    workspaceId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -8153,6 +9462,7 @@ export namespace Prisma {
     wonAt?: true
     lostReason?: true
     notes?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8169,6 +9479,7 @@ export namespace Prisma {
     wonAt?: true
     lostReason?: true
     notes?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8185,6 +9496,7 @@ export namespace Prisma {
     wonAt?: true
     lostReason?: true
     notes?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8288,6 +9600,7 @@ export namespace Prisma {
     wonAt: Date | null
     lostReason: string | null
     notes: string | null
+    workspaceId: string
     createdAt: Date
     updatedAt: Date
     _count: LeadCountAggregateOutputType | null
@@ -8323,8 +9636,10 @@ export namespace Prisma {
     wonAt?: boolean
     lostReason?: boolean
     notes?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     owner?: boolean | Lead$ownerArgs<ExtArgs>
     outreachDrafts?: boolean | Lead$outreachDraftsArgs<ExtArgs>
@@ -8347,8 +9662,10 @@ export namespace Prisma {
     wonAt?: boolean
     lostReason?: boolean
     notes?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     owner?: boolean | Lead$ownerArgs<ExtArgs>
   }, ExtArgs["result"]["lead"]>
@@ -8365,11 +9682,13 @@ export namespace Prisma {
     wonAt?: boolean
     lostReason?: boolean
     notes?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
   export type LeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     owner?: boolean | Lead$ownerArgs<ExtArgs>
     outreachDrafts?: boolean | Lead$outreachDraftsArgs<ExtArgs>
@@ -8380,6 +9699,7 @@ export namespace Prisma {
     _count?: boolean | LeadCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LeadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     owner?: boolean | Lead$ownerArgs<ExtArgs>
   }
@@ -8387,6 +9707,7 @@ export namespace Prisma {
   export type $LeadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Lead"
     objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
       company: Prisma.$CompanyPayload<ExtArgs>
       owner: Prisma.$UserPayload<ExtArgs> | null
       outreachDrafts: Prisma.$OutreachDraftPayload<ExtArgs>[]
@@ -8407,6 +9728,7 @@ export namespace Prisma {
       wonAt: Date | null
       lostReason: string | null
       notes: string | null
+      workspaceId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lead"]>
@@ -8773,6 +10095,7 @@ export namespace Prisma {
    */
   export interface Prisma__LeadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     owner<T extends Lead$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Lead$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     outreachDrafts<T extends Lead$outreachDraftsArgs<ExtArgs> = {}>(args?: Subset<T, Lead$outreachDraftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutreachDraftPayload<ExtArgs>, T, "findMany"> | Null>
@@ -8820,6 +10143,7 @@ export namespace Prisma {
     readonly wonAt: FieldRef<"Lead", 'DateTime'>
     readonly lostReason: FieldRef<"Lead", 'String'>
     readonly notes: FieldRef<"Lead", 'String'>
+    readonly workspaceId: FieldRef<"Lead", 'String'>
     readonly createdAt: FieldRef<"Lead", 'DateTime'>
     readonly updatedAt: FieldRef<"Lead", 'DateTime'>
   }
@@ -9314,6 +10638,7 @@ export namespace Prisma {
     summary: string | null
     summaryGeneratedAt: Date | null
     crawlError: string | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9339,6 +10664,7 @@ export namespace Prisma {
     summary: string | null
     summaryGeneratedAt: Date | null
     crawlError: string | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9370,6 +10696,7 @@ export namespace Prisma {
     summary: number
     summaryGeneratedAt: number
     crawlError: number
+    workspaceId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -9409,6 +10736,7 @@ export namespace Prisma {
     summary?: true
     summaryGeneratedAt?: true
     crawlError?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9434,6 +10762,7 @@ export namespace Prisma {
     summary?: true
     summaryGeneratedAt?: true
     crawlError?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9465,6 +10794,7 @@ export namespace Prisma {
     summary?: true
     summaryGeneratedAt?: true
     crawlError?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -9583,6 +10913,7 @@ export namespace Prisma {
     summary: string | null
     summaryGeneratedAt: Date | null
     crawlError: string | null
+    workspaceId: string
     createdAt: Date
     updatedAt: Date
     _count: WebsiteAuditCountAggregateOutputType | null
@@ -9633,6 +10964,7 @@ export namespace Prisma {
     summary?: boolean
     summaryGeneratedAt?: boolean
     crawlError?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -9665,6 +10997,7 @@ export namespace Prisma {
     summary?: boolean
     summaryGeneratedAt?: boolean
     crawlError?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -9697,6 +11030,7 @@ export namespace Prisma {
     summary?: boolean
     summaryGeneratedAt?: boolean
     crawlError?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -9740,6 +11074,7 @@ export namespace Prisma {
       summary: string | null
       summaryGeneratedAt: Date | null
       crawlError: string | null
+      workspaceId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["websiteAudit"]>
@@ -10162,6 +11497,7 @@ export namespace Prisma {
     readonly summary: FieldRef<"WebsiteAudit", 'String'>
     readonly summaryGeneratedAt: FieldRef<"WebsiteAudit", 'DateTime'>
     readonly crawlError: FieldRef<"WebsiteAudit", 'String'>
+    readonly workspaceId: FieldRef<"WebsiteAudit", 'String'>
     readonly createdAt: FieldRef<"WebsiteAudit", 'DateTime'>
     readonly updatedAt: FieldRef<"WebsiteAudit", 'DateTime'>
   }
@@ -10548,6 +11884,7 @@ export namespace Prisma {
     reputationSignalScore: number | null
     globalScore: number | null
     requiresHumanReview: boolean | null
+    workspaceId: string | null
     scoredAt: Date | null
     updatedAt: Date | null
   }
@@ -10566,6 +11903,7 @@ export namespace Prisma {
     reputationSignalScore: number | null
     globalScore: number | null
     requiresHumanReview: boolean | null
+    workspaceId: string | null
     scoredAt: Date | null
     updatedAt: Date | null
   }
@@ -10585,6 +11923,7 @@ export namespace Prisma {
     globalScore: number
     complianceFlags: number
     requiresHumanReview: number
+    workspaceId: number
     scoredAt: number
     updatedAt: number
     _all: number
@@ -10631,6 +11970,7 @@ export namespace Prisma {
     reputationSignalScore?: true
     globalScore?: true
     requiresHumanReview?: true
+    workspaceId?: true
     scoredAt?: true
     updatedAt?: true
   }
@@ -10649,6 +11989,7 @@ export namespace Prisma {
     reputationSignalScore?: true
     globalScore?: true
     requiresHumanReview?: true
+    workspaceId?: true
     scoredAt?: true
     updatedAt?: true
   }
@@ -10668,6 +12009,7 @@ export namespace Prisma {
     globalScore?: true
     complianceFlags?: true
     requiresHumanReview?: true
+    workspaceId?: true
     scoredAt?: true
     updatedAt?: true
     _all?: true
@@ -10774,6 +12116,7 @@ export namespace Prisma {
     globalScore: number
     complianceFlags: $Enums.ComplianceFlag[]
     requiresHumanReview: boolean
+    workspaceId: string
     scoredAt: Date
     updatedAt: Date
     _count: ScoreCountAggregateOutputType | null
@@ -10812,6 +12155,7 @@ export namespace Prisma {
     globalScore?: boolean
     complianceFlags?: boolean
     requiresHumanReview?: boolean
+    workspaceId?: boolean
     scoredAt?: boolean
     updatedAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -10832,6 +12176,7 @@ export namespace Prisma {
     globalScore?: boolean
     complianceFlags?: boolean
     requiresHumanReview?: boolean
+    workspaceId?: boolean
     scoredAt?: boolean
     updatedAt?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -10852,6 +12197,7 @@ export namespace Prisma {
     globalScore?: boolean
     complianceFlags?: boolean
     requiresHumanReview?: boolean
+    workspaceId?: boolean
     scoredAt?: boolean
     updatedAt?: boolean
   }
@@ -10883,6 +12229,7 @@ export namespace Prisma {
       globalScore: number
       complianceFlags: $Enums.ComplianceFlag[]
       requiresHumanReview: boolean
+      workspaceId: string
       scoredAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["score"]>
@@ -11293,6 +12640,7 @@ export namespace Prisma {
     readonly globalScore: FieldRef<"Score", 'Int'>
     readonly complianceFlags: FieldRef<"Score", 'ComplianceFlag[]'>
     readonly requiresHumanReview: FieldRef<"Score", 'Boolean'>
+    readonly workspaceId: FieldRef<"Score", 'String'>
     readonly scoredAt: FieldRef<"Score", 'DateTime'>
     readonly updatedAt: FieldRef<"Score", 'DateTime'>
   }
@@ -11667,6 +13015,7 @@ export namespace Prisma {
     temperature: number | null
     inputHash: string | null
     outputSchemaVersion: string | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11691,6 +13040,7 @@ export namespace Prisma {
     temperature: number | null
     inputHash: string | null
     outputSchemaVersion: string | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11718,6 +13068,7 @@ export namespace Prisma {
     inputHash: number
     outputSchemaVersion: number
     evidenceRefs: number
+    workspaceId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11752,6 +13103,7 @@ export namespace Prisma {
     temperature?: true
     inputHash?: true
     outputSchemaVersion?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11776,6 +13128,7 @@ export namespace Prisma {
     temperature?: true
     inputHash?: true
     outputSchemaVersion?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11803,6 +13156,7 @@ export namespace Prisma {
     inputHash?: true
     outputSchemaVersion?: true
     evidenceRefs?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11917,6 +13271,7 @@ export namespace Prisma {
     inputHash: string | null
     outputSchemaVersion: string | null
     evidenceRefs: JsonValue | null
+    workspaceId: string
     createdAt: Date
     updatedAt: Date
     _count: OutreachDraftCountAggregateOutputType | null
@@ -11963,6 +13318,7 @@ export namespace Prisma {
     inputHash?: boolean
     outputSchemaVersion?: boolean
     evidenceRefs?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -11993,6 +13349,7 @@ export namespace Prisma {
     inputHash?: boolean
     outputSchemaVersion?: boolean
     evidenceRefs?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -12023,6 +13380,7 @@ export namespace Prisma {
     inputHash?: boolean
     outputSchemaVersion?: boolean
     evidenceRefs?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -12068,6 +13426,7 @@ export namespace Prisma {
       inputHash: string | null
       outputSchemaVersion: string | null
       evidenceRefs: Prisma.JsonValue | null
+      workspaceId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["outreachDraft"]>
@@ -12488,6 +13847,7 @@ export namespace Prisma {
     readonly inputHash: FieldRef<"OutreachDraft", 'String'>
     readonly outputSchemaVersion: FieldRef<"OutreachDraft", 'String'>
     readonly evidenceRefs: FieldRef<"OutreachDraft", 'Json'>
+    readonly workspaceId: FieldRef<"OutreachDraft", 'String'>
     readonly createdAt: FieldRef<"OutreachDraft", 'DateTime'>
     readonly updatedAt: FieldRef<"OutreachDraft", 'DateTime'>
   }
@@ -12882,6 +14242,7 @@ export namespace Prisma {
     hasReply: boolean | null
     lastSyncedAt: Date | null
     snippet: string | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12896,6 +14257,7 @@ export namespace Prisma {
     hasReply: boolean | null
     lastSyncedAt: Date | null
     snippet: string | null
+    workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12911,6 +14273,7 @@ export namespace Prisma {
     lastSyncedAt: number
     labels: number
     snippet: number
+    workspaceId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -12935,6 +14298,7 @@ export namespace Prisma {
     hasReply?: true
     lastSyncedAt?: true
     snippet?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12949,6 +14313,7 @@ export namespace Prisma {
     hasReply?: true
     lastSyncedAt?: true
     snippet?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12964,6 +14329,7 @@ export namespace Prisma {
     lastSyncedAt?: true
     labels?: true
     snippet?: true
+    workspaceId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -13066,6 +14432,7 @@ export namespace Prisma {
     lastSyncedAt: Date | null
     labels: JsonValue | null
     snippet: string | null
+    workspaceId: string
     createdAt: Date
     updatedAt: Date
     _count: GmailThreadCountAggregateOutputType | null
@@ -13100,6 +14467,7 @@ export namespace Prisma {
     lastSyncedAt?: boolean
     labels?: boolean
     snippet?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -13116,6 +14484,7 @@ export namespace Prisma {
     lastSyncedAt?: boolean
     labels?: boolean
     snippet?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
@@ -13132,6 +14501,7 @@ export namespace Prisma {
     lastSyncedAt?: boolean
     labels?: boolean
     snippet?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -13159,6 +14529,7 @@ export namespace Prisma {
       lastSyncedAt: Date | null
       labels: Prisma.JsonValue | null
       snippet: string | null
+      workspaceId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["gmailThread"]>
@@ -13565,6 +14936,7 @@ export namespace Prisma {
     readonly lastSyncedAt: FieldRef<"GmailThread", 'DateTime'>
     readonly labels: FieldRef<"GmailThread", 'Json'>
     readonly snippet: FieldRef<"GmailThread", 'String'>
+    readonly workspaceId: FieldRef<"GmailThread", 'String'>
     readonly createdAt: FieldRef<"GmailThread", 'DateTime'>
     readonly updatedAt: FieldRef<"GmailThread", 'DateTime'>
   }
@@ -13914,6 +15286,7 @@ export namespace Prisma {
     leadId: string | null
     userId: string | null
     eventType: $Enums.ActivityEventType | null
+    workspaceId: string | null
     createdAt: Date | null
   }
 
@@ -13922,6 +15295,7 @@ export namespace Prisma {
     leadId: string | null
     userId: string | null
     eventType: $Enums.ActivityEventType | null
+    workspaceId: string | null
     createdAt: Date | null
   }
 
@@ -13931,6 +15305,7 @@ export namespace Prisma {
     userId: number
     eventType: number
     metadata: number
+    workspaceId: number
     createdAt: number
     _all: number
   }
@@ -13941,6 +15316,7 @@ export namespace Prisma {
     leadId?: true
     userId?: true
     eventType?: true
+    workspaceId?: true
     createdAt?: true
   }
 
@@ -13949,6 +15325,7 @@ export namespace Prisma {
     leadId?: true
     userId?: true
     eventType?: true
+    workspaceId?: true
     createdAt?: true
   }
 
@@ -13958,6 +15335,7 @@ export namespace Prisma {
     userId?: true
     eventType?: true
     metadata?: true
+    workspaceId?: true
     createdAt?: true
     _all?: true
   }
@@ -14040,6 +15418,7 @@ export namespace Prisma {
     userId: string | null
     eventType: $Enums.ActivityEventType
     metadata: JsonValue | null
+    workspaceId: string
     createdAt: Date
     _count: ActivityCountAggregateOutputType | null
     _min: ActivityMinAggregateOutputType | null
@@ -14066,6 +15445,7 @@ export namespace Prisma {
     userId?: boolean
     eventType?: boolean
     metadata?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     user?: boolean | Activity$userArgs<ExtArgs>
@@ -14077,6 +15457,7 @@ export namespace Prisma {
     userId?: boolean
     eventType?: boolean
     metadata?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     user?: boolean | Activity$userArgs<ExtArgs>
@@ -14088,6 +15469,7 @@ export namespace Prisma {
     userId?: boolean
     eventType?: boolean
     metadata?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
   }
 
@@ -14112,6 +15494,7 @@ export namespace Prisma {
       userId: string | null
       eventType: $Enums.ActivityEventType
       metadata: Prisma.JsonValue | null
+      workspaceId: string
       createdAt: Date
     }, ExtArgs["result"]["activity"]>
     composites: {}
@@ -14513,6 +15896,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Activity", 'String'>
     readonly eventType: FieldRef<"Activity", 'ActivityEventType'>
     readonly metadata: FieldRef<"Activity", 'Json'>
+    readonly workspaceId: FieldRef<"Activity", 'String'>
     readonly createdAt: FieldRef<"Activity", 'DateTime'>
   }
     
@@ -14879,6 +16263,7 @@ export namespace Prisma {
     note: string | null
     done: boolean | null
     doneAt: Date | null
+    workspaceId: string | null
     createdAt: Date | null
   }
 
@@ -14890,6 +16275,7 @@ export namespace Prisma {
     note: string | null
     done: boolean | null
     doneAt: Date | null
+    workspaceId: string | null
     createdAt: Date | null
   }
 
@@ -14901,6 +16287,7 @@ export namespace Prisma {
     note: number
     done: number
     doneAt: number
+    workspaceId: number
     createdAt: number
     _all: number
   }
@@ -14914,6 +16301,7 @@ export namespace Prisma {
     note?: true
     done?: true
     doneAt?: true
+    workspaceId?: true
     createdAt?: true
   }
 
@@ -14925,6 +16313,7 @@ export namespace Prisma {
     note?: true
     done?: true
     doneAt?: true
+    workspaceId?: true
     createdAt?: true
   }
 
@@ -14936,6 +16325,7 @@ export namespace Prisma {
     note?: true
     done?: true
     doneAt?: true
+    workspaceId?: true
     createdAt?: true
     _all?: true
   }
@@ -15020,6 +16410,7 @@ export namespace Prisma {
     note: string | null
     done: boolean
     doneAt: Date | null
+    workspaceId: string
     createdAt: Date
     _count: ReminderCountAggregateOutputType | null
     _min: ReminderMinAggregateOutputType | null
@@ -15048,6 +16439,7 @@ export namespace Prisma {
     note?: boolean
     done?: boolean
     doneAt?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -15061,6 +16453,7 @@ export namespace Prisma {
     note?: boolean
     done?: boolean
     doneAt?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
     lead?: boolean | LeadDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -15074,6 +16467,7 @@ export namespace Prisma {
     note?: boolean
     done?: boolean
     doneAt?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
   }
 
@@ -15100,6 +16494,7 @@ export namespace Prisma {
       note: string | null
       done: boolean
       doneAt: Date | null
+      workspaceId: string
       createdAt: Date
     }, ExtArgs["result"]["reminder"]>
     composites: {}
@@ -15503,6 +16898,7 @@ export namespace Prisma {
     readonly note: FieldRef<"Reminder", 'String'>
     readonly done: FieldRef<"Reminder", 'Boolean'>
     readonly doneAt: FieldRef<"Reminder", 'DateTime'>
+    readonly workspaceId: FieldRef<"Reminder", 'String'>
     readonly createdAt: FieldRef<"Reminder", 'DateTime'>
   }
     
@@ -15850,6 +17246,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     color: string | null
+    workspaceId: string | null
     createdAt: Date | null
   }
 
@@ -15857,6 +17254,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     color: string | null
+    workspaceId: string | null
     createdAt: Date | null
   }
 
@@ -15864,6 +17262,7 @@ export namespace Prisma {
     id: number
     name: number
     color: number
+    workspaceId: number
     createdAt: number
     _all: number
   }
@@ -15873,6 +17272,7 @@ export namespace Prisma {
     id?: true
     name?: true
     color?: true
+    workspaceId?: true
     createdAt?: true
   }
 
@@ -15880,6 +17280,7 @@ export namespace Prisma {
     id?: true
     name?: true
     color?: true
+    workspaceId?: true
     createdAt?: true
   }
 
@@ -15887,6 +17288,7 @@ export namespace Prisma {
     id?: true
     name?: true
     color?: true
+    workspaceId?: true
     createdAt?: true
     _all?: true
   }
@@ -15967,6 +17369,7 @@ export namespace Prisma {
     id: string
     name: string
     color: string | null
+    workspaceId: string
     createdAt: Date
     _count: TagCountAggregateOutputType | null
     _min: TagMinAggregateOutputType | null
@@ -15991,7 +17394,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     color?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     companies?: boolean | Tag$companiesArgs<ExtArgs>
     leads?: boolean | Tag$leadsArgs<ExtArgs>
     _count?: boolean | TagCountOutputTypeDefaultArgs<ExtArgs>
@@ -16001,26 +17406,33 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     color?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tag"]>
 
   export type TagSelectScalar = {
     id?: boolean
     name?: boolean
     color?: boolean
+    workspaceId?: boolean
     createdAt?: boolean
   }
 
   export type TagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     companies?: boolean | Tag$companiesArgs<ExtArgs>
     leads?: boolean | Tag$leadsArgs<ExtArgs>
     _count?: boolean | TagCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type TagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type TagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
 
   export type $TagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Tag"
     objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
       companies: Prisma.$CompanyTagPayload<ExtArgs>[]
       leads: Prisma.$LeadTagPayload<ExtArgs>[]
     }
@@ -16028,6 +17440,7 @@ export namespace Prisma {
       id: string
       name: string
       color: string | null
+      workspaceId: string
       createdAt: Date
     }, ExtArgs["result"]["tag"]>
     composites: {}
@@ -16393,6 +17806,7 @@ export namespace Prisma {
    */
   export interface Prisma__TagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     companies<T extends Tag$companiesArgs<ExtArgs> = {}>(args?: Subset<T, Tag$companiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyTagPayload<ExtArgs>, T, "findMany"> | Null>
     leads<T extends Tag$leadsArgs<ExtArgs> = {}>(args?: Subset<T, Tag$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadTagPayload<ExtArgs>, T, "findMany"> | Null>
     /**
@@ -16427,6 +17841,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Tag", 'String'>
     readonly name: FieldRef<"Tag", 'String'>
     readonly color: FieldRef<"Tag", 'String'>
+    readonly workspaceId: FieldRef<"Tag", 'String'>
     readonly createdAt: FieldRef<"Tag", 'DateTime'>
   }
     
@@ -16649,6 +18064,10 @@ export namespace Prisma {
      */
     data: TagCreateManyInput | TagCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -18649,6 +20068,18 @@ export namespace Prisma {
   export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]
 
 
+  export const WorkspaceMemberScalarFieldEnum: {
+    id: 'id',
+    workspaceId: 'workspaceId',
+    userId: 'userId',
+    role: 'role',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WorkspaceMemberScalarFieldEnum = (typeof WorkspaceMemberScalarFieldEnum)[keyof typeof WorkspaceMemberScalarFieldEnum]
+
+
   export const CompanyScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -18679,6 +20110,7 @@ export namespace Prisma {
     yearFounded: 'yearFounded',
     employeeCount: 'employeeCount',
     isActive: 'isActive',
+    workspaceId: 'workspaceId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18736,6 +20168,7 @@ export namespace Prisma {
     wonAt: 'wonAt',
     lostReason: 'lostReason',
     notes: 'notes',
+    workspaceId: 'workspaceId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18770,6 +20203,7 @@ export namespace Prisma {
     summary: 'summary',
     summaryGeneratedAt: 'summaryGeneratedAt',
     crawlError: 'crawlError',
+    workspaceId: 'workspaceId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18792,6 +20226,7 @@ export namespace Prisma {
     globalScore: 'globalScore',
     complianceFlags: 'complianceFlags',
     requiresHumanReview: 'requiresHumanReview',
+    workspaceId: 'workspaceId',
     scoredAt: 'scoredAt',
     updatedAt: 'updatedAt'
   };
@@ -18822,6 +20257,7 @@ export namespace Prisma {
     inputHash: 'inputHash',
     outputSchemaVersion: 'outputSchemaVersion',
     evidenceRefs: 'evidenceRefs',
+    workspaceId: 'workspaceId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18840,6 +20276,7 @@ export namespace Prisma {
     lastSyncedAt: 'lastSyncedAt',
     labels: 'labels',
     snippet: 'snippet',
+    workspaceId: 'workspaceId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -18853,6 +20290,7 @@ export namespace Prisma {
     userId: 'userId',
     eventType: 'eventType',
     metadata: 'metadata',
+    workspaceId: 'workspaceId',
     createdAt: 'createdAt'
   };
 
@@ -18867,6 +20305,7 @@ export namespace Prisma {
     note: 'note',
     done: 'done',
     doneAt: 'doneAt',
+    workspaceId: 'workspaceId',
     createdAt: 'createdAt'
   };
 
@@ -18877,6 +20316,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     color: 'color',
+    workspaceId: 'workspaceId',
     createdAt: 'createdAt'
   };
 
@@ -18991,6 +20431,20 @@ export namespace Prisma {
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceRole'
+   */
+  export type EnumWorkspaceRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'WorkspaceRole[]'
+   */
+  export type ListEnumWorkspaceRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkspaceRole[]'>
     
 
 
@@ -19226,6 +20680,7 @@ export namespace Prisma {
     gmailEmail?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    members?: WorkspaceMemberListRelationFilter
     leads?: LeadListRelationFilter
     activities?: ActivityListRelationFilter
     reminders?: ReminderListRelationFilter
@@ -19248,6 +20703,7 @@ export namespace Prisma {
     gmailEmail?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    members?: WorkspaceMemberOrderByRelationAggregateInput
     leads?: LeadOrderByRelationAggregateInput
     activities?: ActivityOrderByRelationAggregateInput
     reminders?: ReminderOrderByRelationAggregateInput
@@ -19273,6 +20729,7 @@ export namespace Prisma {
     gmailEmail?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    members?: WorkspaceMemberListRelationFilter
     leads?: LeadListRelationFilter
     activities?: ActivityListRelationFilter
     reminders?: ReminderListRelationFilter
@@ -19331,6 +20788,10 @@ export namespace Prisma {
     settings?: JsonFilter<"Workspace">
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeFilter<"Workspace"> | Date | string
+    members?: WorkspaceMemberListRelationFilter
+    leads?: LeadListRelationFilter
+    companies?: CompanyListRelationFilter
+    tags?: TagListRelationFilter
   }
 
   export type WorkspaceOrderByWithRelationInput = {
@@ -19340,6 +20801,10 @@ export namespace Prisma {
     settings?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    members?: WorkspaceMemberOrderByRelationAggregateInput
+    leads?: LeadOrderByRelationAggregateInput
+    companies?: CompanyOrderByRelationAggregateInput
+    tags?: TagOrderByRelationAggregateInput
   }
 
   export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -19352,6 +20817,10 @@ export namespace Prisma {
     settings?: JsonFilter<"Workspace">
     createdAt?: DateTimeFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeFilter<"Workspace"> | Date | string
+    members?: WorkspaceMemberListRelationFilter
+    leads?: LeadListRelationFilter
+    companies?: CompanyListRelationFilter
+    tags?: TagListRelationFilter
   }, "id" | "slug">
 
   export type WorkspaceOrderByWithAggregationInput = {
@@ -19376,6 +20845,70 @@ export namespace Prisma {
     settings?: JsonWithAggregatesFilter<"Workspace">
     createdAt?: DateTimeWithAggregatesFilter<"Workspace"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Workspace"> | Date | string
+  }
+
+  export type WorkspaceMemberWhereInput = {
+    AND?: WorkspaceMemberWhereInput | WorkspaceMemberWhereInput[]
+    OR?: WorkspaceMemberWhereInput[]
+    NOT?: WorkspaceMemberWhereInput | WorkspaceMemberWhereInput[]
+    id?: StringFilter<"WorkspaceMember"> | string
+    workspaceId?: StringFilter<"WorkspaceMember"> | string
+    userId?: StringFilter<"WorkspaceMember"> | string
+    role?: EnumWorkspaceRoleFilter<"WorkspaceMember"> | $Enums.WorkspaceRole
+    createdAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
+    workspace?: XOR<WorkspaceRelationFilter, WorkspaceWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type WorkspaceMemberOrderByWithRelationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type WorkspaceMemberWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    workspaceId_userId?: WorkspaceMemberWorkspaceIdUserIdCompoundUniqueInput
+    AND?: WorkspaceMemberWhereInput | WorkspaceMemberWhereInput[]
+    OR?: WorkspaceMemberWhereInput[]
+    NOT?: WorkspaceMemberWhereInput | WorkspaceMemberWhereInput[]
+    workspaceId?: StringFilter<"WorkspaceMember"> | string
+    userId?: StringFilter<"WorkspaceMember"> | string
+    role?: EnumWorkspaceRoleFilter<"WorkspaceMember"> | $Enums.WorkspaceRole
+    createdAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
+    workspace?: XOR<WorkspaceRelationFilter, WorkspaceWhereInput>
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "workspaceId_userId">
+
+  export type WorkspaceMemberOrderByWithAggregationInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WorkspaceMemberCountOrderByAggregateInput
+    _max?: WorkspaceMemberMaxOrderByAggregateInput
+    _min?: WorkspaceMemberMinOrderByAggregateInput
+  }
+
+  export type WorkspaceMemberScalarWhereWithAggregatesInput = {
+    AND?: WorkspaceMemberScalarWhereWithAggregatesInput | WorkspaceMemberScalarWhereWithAggregatesInput[]
+    OR?: WorkspaceMemberScalarWhereWithAggregatesInput[]
+    NOT?: WorkspaceMemberScalarWhereWithAggregatesInput | WorkspaceMemberScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WorkspaceMember"> | string
+    workspaceId?: StringWithAggregatesFilter<"WorkspaceMember"> | string
+    userId?: StringWithAggregatesFilter<"WorkspaceMember"> | string
+    role?: EnumWorkspaceRoleWithAggregatesFilter<"WorkspaceMember"> | $Enums.WorkspaceRole
+    createdAt?: DateTimeWithAggregatesFilter<"WorkspaceMember"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WorkspaceMember"> | Date | string
   }
 
   export type CompanyWhereInput = {
@@ -19411,8 +20944,10 @@ export namespace Prisma {
     yearFounded?: IntNullableFilter<"Company"> | number | null
     employeeCount?: StringNullableFilter<"Company"> | string | null
     isActive?: BoolFilter<"Company"> | boolean
+    workspaceId?: StringFilter<"Company"> | string
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
+    workspace?: XOR<WorkspaceRelationFilter, WorkspaceWhereInput>
     contacts?: ContactListRelationFilter
     sources?: SourceListRelationFilter
     lead?: XOR<LeadNullableRelationFilter, LeadWhereInput> | null
@@ -19451,8 +20986,10 @@ export namespace Prisma {
     yearFounded?: SortOrderInput | SortOrder
     employeeCount?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
     contacts?: ContactOrderByRelationAggregateInput
     sources?: SourceOrderByRelationAggregateInput
     lead?: LeadOrderByWithRelationInput
@@ -19494,8 +21031,10 @@ export namespace Prisma {
     yearFounded?: IntNullableFilter<"Company"> | number | null
     employeeCount?: StringNullableFilter<"Company"> | string | null
     isActive?: BoolFilter<"Company"> | boolean
+    workspaceId?: StringFilter<"Company"> | string
     createdAt?: DateTimeFilter<"Company"> | Date | string
     updatedAt?: DateTimeFilter<"Company"> | Date | string
+    workspace?: XOR<WorkspaceRelationFilter, WorkspaceWhereInput>
     contacts?: ContactListRelationFilter
     sources?: SourceListRelationFilter
     lead?: XOR<LeadNullableRelationFilter, LeadWhereInput> | null
@@ -19534,6 +21073,7 @@ export namespace Prisma {
     yearFounded?: SortOrderInput | SortOrder
     employeeCount?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CompanyCountOrderByAggregateInput
@@ -19576,6 +21116,7 @@ export namespace Prisma {
     yearFounded?: IntNullableWithAggregatesFilter<"Company"> | number | null
     employeeCount?: StringNullableWithAggregatesFilter<"Company"> | string | null
     isActive?: BoolWithAggregatesFilter<"Company"> | boolean
+    workspaceId?: StringWithAggregatesFilter<"Company"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
   }
@@ -19790,8 +21331,10 @@ export namespace Prisma {
     wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lostReason?: StringNullableFilter<"Lead"> | string | null
     notes?: StringNullableFilter<"Lead"> | string | null
+    workspaceId?: StringFilter<"Lead"> | string
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
+    workspace?: XOR<WorkspaceRelationFilter, WorkspaceWhereInput>
     company?: XOR<CompanyRelationFilter, CompanyWhereInput>
     owner?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     outreachDrafts?: OutreachDraftListRelationFilter
@@ -19813,8 +21356,10 @@ export namespace Prisma {
     wonAt?: SortOrderInput | SortOrder
     lostReason?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
     company?: CompanyOrderByWithRelationInput
     owner?: UserOrderByWithRelationInput
     outreachDrafts?: OutreachDraftOrderByRelationAggregateInput
@@ -19839,8 +21384,10 @@ export namespace Prisma {
     wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lostReason?: StringNullableFilter<"Lead"> | string | null
     notes?: StringNullableFilter<"Lead"> | string | null
+    workspaceId?: StringFilter<"Lead"> | string
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
+    workspace?: XOR<WorkspaceRelationFilter, WorkspaceWhereInput>
     company?: XOR<CompanyRelationFilter, CompanyWhereInput>
     owner?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     outreachDrafts?: OutreachDraftListRelationFilter
@@ -19862,6 +21409,7 @@ export namespace Prisma {
     wonAt?: SortOrderInput | SortOrder
     lostReason?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LeadCountOrderByAggregateInput
@@ -19886,6 +21434,7 @@ export namespace Prisma {
     wonAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
     lostReason?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    workspaceId?: StringWithAggregatesFilter<"Lead"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
   }
@@ -19920,6 +21469,7 @@ export namespace Prisma {
     summary?: StringNullableFilter<"WebsiteAudit"> | string | null
     summaryGeneratedAt?: DateTimeNullableFilter<"WebsiteAudit"> | Date | string | null
     crawlError?: StringNullableFilter<"WebsiteAudit"> | string | null
+    workspaceId?: StringFilter<"WebsiteAudit"> | string
     createdAt?: DateTimeFilter<"WebsiteAudit"> | Date | string
     updatedAt?: DateTimeFilter<"WebsiteAudit"> | Date | string
     company?: XOR<CompanyRelationFilter, CompanyWhereInput>
@@ -19952,6 +21502,7 @@ export namespace Prisma {
     summary?: SortOrderInput | SortOrder
     summaryGeneratedAt?: SortOrderInput | SortOrder
     crawlError?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     company?: CompanyOrderByWithRelationInput
@@ -19987,6 +21538,7 @@ export namespace Prisma {
     summary?: StringNullableFilter<"WebsiteAudit"> | string | null
     summaryGeneratedAt?: DateTimeNullableFilter<"WebsiteAudit"> | Date | string | null
     crawlError?: StringNullableFilter<"WebsiteAudit"> | string | null
+    workspaceId?: StringFilter<"WebsiteAudit"> | string
     createdAt?: DateTimeFilter<"WebsiteAudit"> | Date | string
     updatedAt?: DateTimeFilter<"WebsiteAudit"> | Date | string
     company?: XOR<CompanyRelationFilter, CompanyWhereInput>
@@ -20019,6 +21571,7 @@ export namespace Prisma {
     summary?: SortOrderInput | SortOrder
     summaryGeneratedAt?: SortOrderInput | SortOrder
     crawlError?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: WebsiteAuditCountOrderByAggregateInput
@@ -20058,6 +21611,7 @@ export namespace Prisma {
     summary?: StringNullableWithAggregatesFilter<"WebsiteAudit"> | string | null
     summaryGeneratedAt?: DateTimeNullableWithAggregatesFilter<"WebsiteAudit"> | Date | string | null
     crawlError?: StringNullableWithAggregatesFilter<"WebsiteAudit"> | string | null
+    workspaceId?: StringWithAggregatesFilter<"WebsiteAudit"> | string
     createdAt?: DateTimeWithAggregatesFilter<"WebsiteAudit"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"WebsiteAudit"> | Date | string
   }
@@ -20080,6 +21634,7 @@ export namespace Prisma {
     globalScore?: IntFilter<"Score"> | number
     complianceFlags?: EnumComplianceFlagNullableListFilter<"Score">
     requiresHumanReview?: BoolFilter<"Score"> | boolean
+    workspaceId?: StringFilter<"Score"> | string
     scoredAt?: DateTimeFilter<"Score"> | Date | string
     updatedAt?: DateTimeFilter<"Score"> | Date | string
     company?: XOR<CompanyRelationFilter, CompanyWhereInput>
@@ -20100,6 +21655,7 @@ export namespace Prisma {
     globalScore?: SortOrder
     complianceFlags?: SortOrder
     requiresHumanReview?: SortOrder
+    workspaceId?: SortOrder
     scoredAt?: SortOrder
     updatedAt?: SortOrder
     company?: CompanyOrderByWithRelationInput
@@ -20123,6 +21679,7 @@ export namespace Prisma {
     globalScore?: IntFilter<"Score"> | number
     complianceFlags?: EnumComplianceFlagNullableListFilter<"Score">
     requiresHumanReview?: BoolFilter<"Score"> | boolean
+    workspaceId?: StringFilter<"Score"> | string
     scoredAt?: DateTimeFilter<"Score"> | Date | string
     updatedAt?: DateTimeFilter<"Score"> | Date | string
     company?: XOR<CompanyRelationFilter, CompanyWhereInput>
@@ -20143,6 +21700,7 @@ export namespace Prisma {
     globalScore?: SortOrder
     complianceFlags?: SortOrder
     requiresHumanReview?: SortOrder
+    workspaceId?: SortOrder
     scoredAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ScoreCountOrderByAggregateInput
@@ -20170,6 +21728,7 @@ export namespace Prisma {
     globalScore?: IntWithAggregatesFilter<"Score"> | number
     complianceFlags?: EnumComplianceFlagNullableListFilter<"Score">
     requiresHumanReview?: BoolWithAggregatesFilter<"Score"> | boolean
+    workspaceId?: StringWithAggregatesFilter<"Score"> | string
     scoredAt?: DateTimeWithAggregatesFilter<"Score"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Score"> | Date | string
   }
@@ -20200,6 +21759,7 @@ export namespace Prisma {
     inputHash?: StringNullableFilter<"OutreachDraft"> | string | null
     outputSchemaVersion?: StringNullableFilter<"OutreachDraft"> | string | null
     evidenceRefs?: JsonNullableFilter<"OutreachDraft">
+    workspaceId?: StringFilter<"OutreachDraft"> | string
     createdAt?: DateTimeFilter<"OutreachDraft"> | Date | string
     updatedAt?: DateTimeFilter<"OutreachDraft"> | Date | string
     lead?: XOR<LeadRelationFilter, LeadWhereInput>
@@ -20230,6 +21790,7 @@ export namespace Prisma {
     inputHash?: SortOrderInput | SortOrder
     outputSchemaVersion?: SortOrderInput | SortOrder
     evidenceRefs?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lead?: LeadOrderByWithRelationInput
@@ -20263,6 +21824,7 @@ export namespace Prisma {
     inputHash?: StringNullableFilter<"OutreachDraft"> | string | null
     outputSchemaVersion?: StringNullableFilter<"OutreachDraft"> | string | null
     evidenceRefs?: JsonNullableFilter<"OutreachDraft">
+    workspaceId?: StringFilter<"OutreachDraft"> | string
     createdAt?: DateTimeFilter<"OutreachDraft"> | Date | string
     updatedAt?: DateTimeFilter<"OutreachDraft"> | Date | string
     lead?: XOR<LeadRelationFilter, LeadWhereInput>
@@ -20293,6 +21855,7 @@ export namespace Prisma {
     inputHash?: SortOrderInput | SortOrder
     outputSchemaVersion?: SortOrderInput | SortOrder
     evidenceRefs?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: OutreachDraftCountOrderByAggregateInput
@@ -20328,6 +21891,7 @@ export namespace Prisma {
     inputHash?: StringNullableWithAggregatesFilter<"OutreachDraft"> | string | null
     outputSchemaVersion?: StringNullableWithAggregatesFilter<"OutreachDraft"> | string | null
     evidenceRefs?: JsonNullableWithAggregatesFilter<"OutreachDraft">
+    workspaceId?: StringWithAggregatesFilter<"OutreachDraft"> | string
     createdAt?: DateTimeWithAggregatesFilter<"OutreachDraft"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"OutreachDraft"> | Date | string
   }
@@ -20346,6 +21910,7 @@ export namespace Prisma {
     lastSyncedAt?: DateTimeNullableFilter<"GmailThread"> | Date | string | null
     labels?: JsonNullableFilter<"GmailThread">
     snippet?: StringNullableFilter<"GmailThread"> | string | null
+    workspaceId?: StringFilter<"GmailThread"> | string
     createdAt?: DateTimeFilter<"GmailThread"> | Date | string
     updatedAt?: DateTimeFilter<"GmailThread"> | Date | string
     lead?: XOR<LeadRelationFilter, LeadWhereInput>
@@ -20362,6 +21927,7 @@ export namespace Prisma {
     lastSyncedAt?: SortOrderInput | SortOrder
     labels?: SortOrderInput | SortOrder
     snippet?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lead?: LeadOrderByWithRelationInput
@@ -20381,6 +21947,7 @@ export namespace Prisma {
     lastSyncedAt?: DateTimeNullableFilter<"GmailThread"> | Date | string | null
     labels?: JsonNullableFilter<"GmailThread">
     snippet?: StringNullableFilter<"GmailThread"> | string | null
+    workspaceId?: StringFilter<"GmailThread"> | string
     createdAt?: DateTimeFilter<"GmailThread"> | Date | string
     updatedAt?: DateTimeFilter<"GmailThread"> | Date | string
     lead?: XOR<LeadRelationFilter, LeadWhereInput>
@@ -20397,6 +21964,7 @@ export namespace Prisma {
     lastSyncedAt?: SortOrderInput | SortOrder
     labels?: SortOrderInput | SortOrder
     snippet?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: GmailThreadCountOrderByAggregateInput
@@ -20420,6 +21988,7 @@ export namespace Prisma {
     lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"GmailThread"> | Date | string | null
     labels?: JsonNullableWithAggregatesFilter<"GmailThread">
     snippet?: StringNullableWithAggregatesFilter<"GmailThread"> | string | null
+    workspaceId?: StringWithAggregatesFilter<"GmailThread"> | string
     createdAt?: DateTimeWithAggregatesFilter<"GmailThread"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GmailThread"> | Date | string
   }
@@ -20433,6 +22002,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Activity"> | string | null
     eventType?: EnumActivityEventTypeFilter<"Activity"> | $Enums.ActivityEventType
     metadata?: JsonNullableFilter<"Activity">
+    workspaceId?: StringFilter<"Activity"> | string
     createdAt?: DateTimeFilter<"Activity"> | Date | string
     lead?: XOR<LeadRelationFilter, LeadWhereInput>
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -20444,6 +22014,7 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     eventType?: SortOrder
     metadata?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     lead?: LeadOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
@@ -20458,6 +22029,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Activity"> | string | null
     eventType?: EnumActivityEventTypeFilter<"Activity"> | $Enums.ActivityEventType
     metadata?: JsonNullableFilter<"Activity">
+    workspaceId?: StringFilter<"Activity"> | string
     createdAt?: DateTimeFilter<"Activity"> | Date | string
     lead?: XOR<LeadRelationFilter, LeadWhereInput>
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -20469,6 +22041,7 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     eventType?: SortOrder
     metadata?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     _count?: ActivityCountOrderByAggregateInput
     _max?: ActivityMaxOrderByAggregateInput
@@ -20484,6 +22057,7 @@ export namespace Prisma {
     userId?: StringNullableWithAggregatesFilter<"Activity"> | string | null
     eventType?: EnumActivityEventTypeWithAggregatesFilter<"Activity"> | $Enums.ActivityEventType
     metadata?: JsonNullableWithAggregatesFilter<"Activity">
+    workspaceId?: StringWithAggregatesFilter<"Activity"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Activity"> | Date | string
   }
 
@@ -20498,6 +22072,7 @@ export namespace Prisma {
     note?: StringNullableFilter<"Reminder"> | string | null
     done?: BoolFilter<"Reminder"> | boolean
     doneAt?: DateTimeNullableFilter<"Reminder"> | Date | string | null
+    workspaceId?: StringFilter<"Reminder"> | string
     createdAt?: DateTimeFilter<"Reminder"> | Date | string
     lead?: XOR<LeadRelationFilter, LeadWhereInput>
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -20511,6 +22086,7 @@ export namespace Prisma {
     note?: SortOrderInput | SortOrder
     done?: SortOrder
     doneAt?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     lead?: LeadOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
@@ -20527,6 +22103,7 @@ export namespace Prisma {
     note?: StringNullableFilter<"Reminder"> | string | null
     done?: BoolFilter<"Reminder"> | boolean
     doneAt?: DateTimeNullableFilter<"Reminder"> | Date | string | null
+    workspaceId?: StringFilter<"Reminder"> | string
     createdAt?: DateTimeFilter<"Reminder"> | Date | string
     lead?: XOR<LeadRelationFilter, LeadWhereInput>
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -20540,6 +22117,7 @@ export namespace Prisma {
     note?: SortOrderInput | SortOrder
     done?: SortOrder
     doneAt?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     _count?: ReminderCountOrderByAggregateInput
     _max?: ReminderMaxOrderByAggregateInput
@@ -20557,6 +22135,7 @@ export namespace Prisma {
     note?: StringNullableWithAggregatesFilter<"Reminder"> | string | null
     done?: BoolWithAggregatesFilter<"Reminder"> | boolean
     doneAt?: DateTimeNullableWithAggregatesFilter<"Reminder"> | Date | string | null
+    workspaceId?: StringWithAggregatesFilter<"Reminder"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Reminder"> | Date | string
   }
 
@@ -20567,7 +22146,9 @@ export namespace Prisma {
     id?: StringFilter<"Tag"> | string
     name?: StringFilter<"Tag"> | string
     color?: StringNullableFilter<"Tag"> | string | null
+    workspaceId?: StringFilter<"Tag"> | string
     createdAt?: DateTimeFilter<"Tag"> | Date | string
+    workspace?: XOR<WorkspaceRelationFilter, WorkspaceWhereInput>
     companies?: CompanyTagListRelationFilter
     leads?: LeadTagListRelationFilter
   }
@@ -20576,7 +22157,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     color?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
     companies?: CompanyTagOrderByRelationAggregateInput
     leads?: LeadTagOrderByRelationAggregateInput
   }
@@ -20588,7 +22171,9 @@ export namespace Prisma {
     OR?: TagWhereInput[]
     NOT?: TagWhereInput | TagWhereInput[]
     color?: StringNullableFilter<"Tag"> | string | null
+    workspaceId?: StringFilter<"Tag"> | string
     createdAt?: DateTimeFilter<"Tag"> | Date | string
+    workspace?: XOR<WorkspaceRelationFilter, WorkspaceWhereInput>
     companies?: CompanyTagListRelationFilter
     leads?: LeadTagListRelationFilter
   }, "id" | "name">
@@ -20597,6 +22182,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     color?: SortOrderInput | SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     _count?: TagCountOrderByAggregateInput
     _max?: TagMaxOrderByAggregateInput
@@ -20610,6 +22196,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Tag"> | string
     name?: StringWithAggregatesFilter<"Tag"> | string
     color?: StringNullableWithAggregatesFilter<"Tag"> | string | null
+    workspaceId?: StringWithAggregatesFilter<"Tag"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Tag"> | Date | string
   }
 
@@ -20717,6 +22304,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutUserInput
     leads?: LeadCreateNestedManyWithoutOwnerInput
     activities?: ActivityCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
@@ -20739,6 +22327,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
     leads?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
@@ -20761,6 +22350,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutUserNestedInput
     leads?: LeadUpdateManyWithoutOwnerNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
@@ -20783,6 +22373,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
     leads?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
@@ -20850,6 +22441,10 @@ export namespace Prisma {
     settings?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    leads?: LeadCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    tags?: TagCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateInput = {
@@ -20859,6 +22454,10 @@ export namespace Prisma {
     settings?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    leads?: LeadUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    tags?: TagUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUpdateInput = {
@@ -20868,6 +22467,10 @@ export namespace Prisma {
     settings?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    leads?: LeadUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    tags?: TagUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateInput = {
@@ -20877,6 +22480,10 @@ export namespace Prisma {
     settings?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    leads?: LeadUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    tags?: TagUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateManyInput = {
@@ -20902,6 +22509,67 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceMemberCreateInput = {
+    id?: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutMembersInput
+    user: UserCreateNestedOneWithoutMembersInput
+  }
+
+  export type WorkspaceMemberUncheckedCreateInput = {
+    id?: string
+    workspaceId: string
+    userId: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceMemberUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
+    user?: UserUpdateOneRequiredWithoutMembersNestedInput
+  }
+
+  export type WorkspaceMemberUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceMemberCreateManyInput = {
+    id?: string
+    workspaceId: string
+    userId: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceMemberUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceMemberUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20938,6 +22606,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCreateNestedManyWithoutCompanyInput
     sources?: SourceCreateNestedManyWithoutCompanyInput
     lead?: LeadCreateNestedOneWithoutCompanyInput
@@ -20976,6 +22645,7 @@ export namespace Prisma {
     yearFounded?: number | null
     employeeCount?: string | null
     isActive?: boolean
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
@@ -21018,6 +22688,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactUpdateManyWithoutCompanyNestedInput
     sources?: SourceUpdateManyWithoutCompanyNestedInput
     lead?: LeadUpdateOneWithoutCompanyNestedInput
@@ -21056,6 +22727,7 @@ export namespace Prisma {
     yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
     employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
@@ -21096,6 +22768,7 @@ export namespace Prisma {
     yearFounded?: number | null
     employeeCount?: string | null
     isActive?: boolean
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21164,6 +22837,7 @@ export namespace Prisma {
     yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
     employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21406,6 +23080,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutLeadsInput
     company: CompanyCreateNestedOneWithoutLeadInput
     owner?: UserCreateNestedOneWithoutLeadsInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutLeadInput
@@ -21427,6 +23102,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutLeadInput
@@ -21448,6 +23124,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutLeadsNestedInput
     company?: CompanyUpdateOneRequiredWithoutLeadNestedInput
     owner?: UserUpdateOneWithoutLeadsNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutLeadNestedInput
@@ -21469,6 +23146,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutLeadNestedInput
@@ -21490,6 +23168,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21520,6 +23199,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21550,6 +23230,7 @@ export namespace Prisma {
     summary?: string | null
     summaryGeneratedAt?: Date | string | null
     crawlError?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutWebsiteAuditInput
@@ -21582,6 +23263,7 @@ export namespace Prisma {
     summary?: string | null
     summaryGeneratedAt?: Date | string | null
     crawlError?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21612,6 +23294,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     summaryGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     crawlError?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutWebsiteAuditNestedInput
@@ -21644,6 +23327,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     summaryGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     crawlError?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21675,6 +23359,7 @@ export namespace Prisma {
     summary?: string | null
     summaryGeneratedAt?: Date | string | null
     crawlError?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21705,6 +23390,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     summaryGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     crawlError?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21736,6 +23422,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     summaryGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     crawlError?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21754,6 +23441,7 @@ export namespace Prisma {
     globalScore?: number
     complianceFlags?: ScoreCreatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: boolean
+    workspaceId: string
     scoredAt?: Date | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutScoreInput
@@ -21774,6 +23462,7 @@ export namespace Prisma {
     globalScore?: number
     complianceFlags?: ScoreCreatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: boolean
+    workspaceId: string
     scoredAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21792,6 +23481,7 @@ export namespace Prisma {
     globalScore?: IntFieldUpdateOperationsInput | number
     complianceFlags?: ScoreUpdatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     scoredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutScoreNestedInput
@@ -21812,6 +23502,7 @@ export namespace Prisma {
     globalScore?: IntFieldUpdateOperationsInput | number
     complianceFlags?: ScoreUpdatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     scoredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21831,6 +23522,7 @@ export namespace Prisma {
     globalScore?: number
     complianceFlags?: ScoreCreatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: boolean
+    workspaceId: string
     scoredAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21849,6 +23541,7 @@ export namespace Prisma {
     globalScore?: IntFieldUpdateOperationsInput | number
     complianceFlags?: ScoreUpdatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     scoredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21868,6 +23561,7 @@ export namespace Prisma {
     globalScore?: IntFieldUpdateOperationsInput | number
     complianceFlags?: ScoreUpdatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     scoredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21892,6 +23586,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lead: LeadCreateNestedOneWithoutOutreachDraftsInput
@@ -21922,6 +23617,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21946,6 +23642,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutOutreachDraftsNestedInput
@@ -21976,6 +23673,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22003,6 +23701,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22027,6 +23726,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22054,6 +23754,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22068,6 +23769,7 @@ export namespace Prisma {
     lastSyncedAt?: Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lead: LeadCreateNestedOneWithoutGmailThreadsInput
@@ -22084,6 +23786,7 @@ export namespace Prisma {
     lastSyncedAt?: Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22098,6 +23801,7 @@ export namespace Prisma {
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutGmailThreadsNestedInput
@@ -22114,6 +23818,7 @@ export namespace Prisma {
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22129,6 +23834,7 @@ export namespace Prisma {
     lastSyncedAt?: Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22143,6 +23849,7 @@ export namespace Prisma {
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22158,6 +23865,7 @@ export namespace Prisma {
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22166,6 +23874,7 @@ export namespace Prisma {
     id?: string
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     lead: LeadCreateNestedOneWithoutActivitiesInput
     user?: UserCreateNestedOneWithoutActivitiesInput
@@ -22177,6 +23886,7 @@ export namespace Prisma {
     userId?: string | null
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -22184,6 +23894,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutActivitiesNestedInput
     user?: UserUpdateOneWithoutActivitiesNestedInput
@@ -22195,6 +23906,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22204,6 +23916,7 @@ export namespace Prisma {
     userId?: string | null
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -22211,6 +23924,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22220,6 +23934,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22229,6 +23944,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
     lead: LeadCreateNestedOneWithoutRemindersInput
     user: UserCreateNestedOneWithoutRemindersInput
@@ -22242,6 +23958,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -22251,6 +23968,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutRemindersNestedInput
     user?: UserUpdateOneRequiredWithoutRemindersNestedInput
@@ -22264,6 +23982,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22275,6 +23994,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -22284,6 +24004,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22295,6 +24016,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22303,6 +24025,7 @@ export namespace Prisma {
     name: string
     color?: string | null
     createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTagsInput
     companies?: CompanyTagCreateNestedManyWithoutTagInput
     leads?: LeadTagCreateNestedManyWithoutTagInput
   }
@@ -22311,6 +24034,7 @@ export namespace Prisma {
     id?: string
     name: string
     color?: string | null
+    workspaceId: string
     createdAt?: Date | string
     companies?: CompanyTagUncheckedCreateNestedManyWithoutTagInput
     leads?: LeadTagUncheckedCreateNestedManyWithoutTagInput
@@ -22321,6 +24045,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTagsNestedInput
     companies?: CompanyTagUpdateManyWithoutTagNestedInput
     leads?: LeadTagUpdateManyWithoutTagNestedInput
   }
@@ -22329,6 +24054,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companies?: CompanyTagUncheckedUpdateManyWithoutTagNestedInput
     leads?: LeadTagUncheckedUpdateManyWithoutTagNestedInput
@@ -22338,6 +24064,7 @@ export namespace Prisma {
     id?: string
     name: string
     color?: string | null
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -22352,6 +24079,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -22480,6 +24208,12 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type WorkspaceMemberListRelationFilter = {
+    every?: WorkspaceMemberWhereInput
+    some?: WorkspaceMemberWhereInput
+    none?: WorkspaceMemberWhereInput
+  }
+
   export type LeadListRelationFilter = {
     every?: LeadWhereInput
     some?: LeadWhereInput
@@ -22507,6 +24241,10 @@ export namespace Prisma {
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type WorkspaceMemberOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type LeadOrderByRelationAggregateInput = {
@@ -22673,6 +24411,26 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type CompanyListRelationFilter = {
+    every?: CompanyWhereInput
+    some?: CompanyWhereInput
+    none?: CompanyWhereInput
+  }
+
+  export type TagListRelationFilter = {
+    every?: TagWhereInput
+    some?: TagWhereInput
+    none?: TagWhereInput
+  }
+
+  export type CompanyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TagOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type WorkspaceCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -22721,6 +24479,65 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedJsonFilter<$PrismaModel>
     _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type EnumWorkspaceRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceRole | EnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceRoleFilter<$PrismaModel> | $Enums.WorkspaceRole
+  }
+
+  export type WorkspaceRelationFilter = {
+    is?: WorkspaceWhereInput
+    isNot?: WorkspaceWhereInput
+  }
+
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type WorkspaceMemberWorkspaceIdUserIdCompoundUniqueInput = {
+    workspaceId: string
+    userId: string
+  }
+
+  export type WorkspaceMemberCountOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceMemberMaxOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WorkspaceMemberMinOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    role?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumWorkspaceRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceRole | EnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceRoleFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceRoleFilter<$PrismaModel>
   }
 
   export type EnumCompanyNicheFilter<$PrismaModel = never> = {
@@ -22861,6 +24678,7 @@ export namespace Prisma {
     yearFounded?: SortOrder
     employeeCount?: SortOrder
     isActive?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22900,6 +24718,7 @@ export namespace Prisma {
     yearFounded?: SortOrder
     employeeCount?: SortOrder
     isActive?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22933,6 +24752,7 @@ export namespace Prisma {
     yearFounded?: SortOrder
     employeeCount?: SortOrder
     isActive?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23273,6 +25093,7 @@ export namespace Prisma {
     wonAt?: SortOrder
     lostReason?: SortOrder
     notes?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23293,6 +25114,7 @@ export namespace Prisma {
     wonAt?: SortOrder
     lostReason?: SortOrder
     notes?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23309,6 +25131,7 @@ export namespace Prisma {
     wonAt?: SortOrder
     lostReason?: SortOrder
     notes?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23380,6 +25203,7 @@ export namespace Prisma {
     summary?: SortOrder
     summaryGeneratedAt?: SortOrder
     crawlError?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23411,6 +25235,7 @@ export namespace Prisma {
     summary?: SortOrder
     summaryGeneratedAt?: SortOrder
     crawlError?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23436,6 +25261,7 @@ export namespace Prisma {
     summary?: SortOrder
     summaryGeneratedAt?: SortOrder
     crawlError?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23469,6 +25295,7 @@ export namespace Prisma {
     globalScore?: SortOrder
     complianceFlags?: SortOrder
     requiresHumanReview?: SortOrder
+    workspaceId?: SortOrder
     scoredAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23500,6 +25327,7 @@ export namespace Prisma {
     reputationSignalScore?: SortOrder
     globalScore?: SortOrder
     requiresHumanReview?: SortOrder
+    workspaceId?: SortOrder
     scoredAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23518,6 +25346,7 @@ export namespace Prisma {
     reputationSignalScore?: SortOrder
     globalScore?: SortOrder
     requiresHumanReview?: SortOrder
+    workspaceId?: SortOrder
     scoredAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23596,6 +25425,7 @@ export namespace Prisma {
     inputHash?: SortOrder
     outputSchemaVersion?: SortOrder
     evidenceRefs?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23624,6 +25454,7 @@ export namespace Prisma {
     temperature?: SortOrder
     inputHash?: SortOrder
     outputSchemaVersion?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23648,6 +25479,7 @@ export namespace Prisma {
     temperature?: SortOrder
     inputHash?: SortOrder
     outputSchemaVersion?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23707,6 +25539,7 @@ export namespace Prisma {
     lastSyncedAt?: SortOrder
     labels?: SortOrder
     snippet?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23725,6 +25558,7 @@ export namespace Prisma {
     hasReply?: SortOrder
     lastSyncedAt?: SortOrder
     snippet?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23739,6 +25573,7 @@ export namespace Prisma {
     hasReply?: SortOrder
     lastSyncedAt?: SortOrder
     snippet?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23760,6 +25595,7 @@ export namespace Prisma {
     userId?: SortOrder
     eventType?: SortOrder
     metadata?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23768,6 +25604,7 @@ export namespace Prisma {
     leadId?: SortOrder
     userId?: SortOrder
     eventType?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23776,6 +25613,7 @@ export namespace Prisma {
     leadId?: SortOrder
     userId?: SortOrder
     eventType?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23789,11 +25627,6 @@ export namespace Prisma {
     _max?: NestedEnumActivityEventTypeFilter<$PrismaModel>
   }
 
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
   export type ReminderCountOrderByAggregateInput = {
     id?: SortOrder
     leadId?: SortOrder
@@ -23802,6 +25635,7 @@ export namespace Prisma {
     note?: SortOrder
     done?: SortOrder
     doneAt?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23813,6 +25647,7 @@ export namespace Prisma {
     note?: SortOrder
     done?: SortOrder
     doneAt?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23824,6 +25659,7 @@ export namespace Prisma {
     note?: SortOrder
     done?: SortOrder
     doneAt?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23831,6 +25667,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     color?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23838,6 +25675,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     color?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23845,6 +25683,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     color?: SortOrder
+    workspaceId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -23893,6 +25732,13 @@ export namespace Prisma {
     tagId?: SortOrder
   }
 
+  export type WorkspaceMemberCreateNestedManyWithoutUserInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutUserInput, WorkspaceMemberUncheckedCreateWithoutUserInput> | WorkspaceMemberCreateWithoutUserInput[] | WorkspaceMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutUserInput | WorkspaceMemberCreateOrConnectWithoutUserInput[]
+    createMany?: WorkspaceMemberCreateManyUserInputEnvelope
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
   export type LeadCreateNestedManyWithoutOwnerInput = {
     create?: XOR<LeadCreateWithoutOwnerInput, LeadUncheckedCreateWithoutOwnerInput> | LeadCreateWithoutOwnerInput[] | LeadUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: LeadCreateOrConnectWithoutOwnerInput | LeadCreateOrConnectWithoutOwnerInput[]
@@ -23919,6 +25765,13 @@ export namespace Prisma {
     connectOrCreate?: OutreachDraftCreateOrConnectWithoutAuthorInput | OutreachDraftCreateOrConnectWithoutAuthorInput[]
     createMany?: OutreachDraftCreateManyAuthorInputEnvelope
     connect?: OutreachDraftWhereUniqueInput | OutreachDraftWhereUniqueInput[]
+  }
+
+  export type WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutUserInput, WorkspaceMemberUncheckedCreateWithoutUserInput> | WorkspaceMemberCreateWithoutUserInput[] | WorkspaceMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutUserInput | WorkspaceMemberCreateOrConnectWithoutUserInput[]
+    createMany?: WorkspaceMemberCreateManyUserInputEnvelope
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
   }
 
   export type LeadUncheckedCreateNestedManyWithoutOwnerInput = {
@@ -23967,6 +25820,20 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type WorkspaceMemberUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutUserInput, WorkspaceMemberUncheckedCreateWithoutUserInput> | WorkspaceMemberCreateWithoutUserInput[] | WorkspaceMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutUserInput | WorkspaceMemberCreateOrConnectWithoutUserInput[]
+    upsert?: WorkspaceMemberUpsertWithWhereUniqueWithoutUserInput | WorkspaceMemberUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WorkspaceMemberCreateManyUserInputEnvelope
+    set?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    disconnect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    delete?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    update?: WorkspaceMemberUpdateWithWhereUniqueWithoutUserInput | WorkspaceMemberUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutUserInput | WorkspaceMemberUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
   }
 
   export type LeadUpdateManyWithoutOwnerNestedInput = {
@@ -24025,6 +25892,20 @@ export namespace Prisma {
     deleteMany?: OutreachDraftScalarWhereInput | OutreachDraftScalarWhereInput[]
   }
 
+  export type WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutUserInput, WorkspaceMemberUncheckedCreateWithoutUserInput> | WorkspaceMemberCreateWithoutUserInput[] | WorkspaceMemberUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutUserInput | WorkspaceMemberCreateOrConnectWithoutUserInput[]
+    upsert?: WorkspaceMemberUpsertWithWhereUniqueWithoutUserInput | WorkspaceMemberUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: WorkspaceMemberCreateManyUserInputEnvelope
+    set?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    disconnect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    delete?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    update?: WorkspaceMemberUpdateWithWhereUniqueWithoutUserInput | WorkspaceMemberUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutUserInput | WorkspaceMemberUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
   export type LeadUncheckedUpdateManyWithoutOwnerNestedInput = {
     create?: XOR<LeadCreateWithoutOwnerInput, LeadUncheckedCreateWithoutOwnerInput> | LeadCreateWithoutOwnerInput[] | LeadUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: LeadCreateOrConnectWithoutOwnerInput | LeadCreateOrConnectWithoutOwnerInput[]
@@ -24079,6 +25960,212 @@ export namespace Prisma {
     update?: OutreachDraftUpdateWithWhereUniqueWithoutAuthorInput | OutreachDraftUpdateWithWhereUniqueWithoutAuthorInput[]
     updateMany?: OutreachDraftUpdateManyWithWhereWithoutAuthorInput | OutreachDraftUpdateManyWithWhereWithoutAuthorInput[]
     deleteMany?: OutreachDraftScalarWhereInput | OutreachDraftScalarWhereInput[]
+  }
+
+  export type WorkspaceMemberCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: WorkspaceMemberCreateManyWorkspaceInputEnvelope
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
+  export type LeadCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<LeadCreateWithoutWorkspaceInput, LeadUncheckedCreateWithoutWorkspaceInput> | LeadCreateWithoutWorkspaceInput[] | LeadUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutWorkspaceInput | LeadCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: LeadCreateManyWorkspaceInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+  }
+
+  export type CompanyCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceInput, CompanyUncheckedCreateWithoutWorkspaceInput> | CompanyCreateWithoutWorkspaceInput[] | CompanyUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceInput | CompanyCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: CompanyCreateManyWorkspaceInputEnvelope
+    connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+  }
+
+  export type TagCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<TagCreateWithoutWorkspaceInput, TagUncheckedCreateWithoutWorkspaceInput> | TagCreateWithoutWorkspaceInput[] | TagUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: TagCreateOrConnectWithoutWorkspaceInput | TagCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: TagCreateManyWorkspaceInputEnvelope
+    connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+  }
+
+  export type WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: WorkspaceMemberCreateManyWorkspaceInputEnvelope
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+  }
+
+  export type LeadUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<LeadCreateWithoutWorkspaceInput, LeadUncheckedCreateWithoutWorkspaceInput> | LeadCreateWithoutWorkspaceInput[] | LeadUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutWorkspaceInput | LeadCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: LeadCreateManyWorkspaceInputEnvelope
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+  }
+
+  export type CompanyUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceInput, CompanyUncheckedCreateWithoutWorkspaceInput> | CompanyCreateWithoutWorkspaceInput[] | CompanyUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceInput | CompanyCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: CompanyCreateManyWorkspaceInputEnvelope
+    connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+  }
+
+  export type TagUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<TagCreateWithoutWorkspaceInput, TagUncheckedCreateWithoutWorkspaceInput> | TagCreateWithoutWorkspaceInput[] | TagUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: TagCreateOrConnectWithoutWorkspaceInput | TagCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: TagCreateManyWorkspaceInputEnvelope
+    connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+  }
+
+  export type WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: WorkspaceMemberUpsertWithWhereUniqueWithoutWorkspaceInput | WorkspaceMemberUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: WorkspaceMemberCreateManyWorkspaceInputEnvelope
+    set?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    disconnect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    delete?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    update?: WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput | WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput | WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
+  export type LeadUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<LeadCreateWithoutWorkspaceInput, LeadUncheckedCreateWithoutWorkspaceInput> | LeadCreateWithoutWorkspaceInput[] | LeadUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutWorkspaceInput | LeadCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutWorkspaceInput | LeadUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: LeadCreateManyWorkspaceInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutWorkspaceInput | LeadUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutWorkspaceInput | LeadUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
+  }
+
+  export type CompanyUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceInput, CompanyUncheckedCreateWithoutWorkspaceInput> | CompanyCreateWithoutWorkspaceInput[] | CompanyUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceInput | CompanyCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: CompanyUpsertWithWhereUniqueWithoutWorkspaceInput | CompanyUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: CompanyCreateManyWorkspaceInputEnvelope
+    set?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+    disconnect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+    delete?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+    connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+    update?: CompanyUpdateWithWhereUniqueWithoutWorkspaceInput | CompanyUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: CompanyUpdateManyWithWhereWithoutWorkspaceInput | CompanyUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
+  }
+
+  export type TagUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<TagCreateWithoutWorkspaceInput, TagUncheckedCreateWithoutWorkspaceInput> | TagCreateWithoutWorkspaceInput[] | TagUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: TagCreateOrConnectWithoutWorkspaceInput | TagCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: TagUpsertWithWhereUniqueWithoutWorkspaceInput | TagUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: TagCreateManyWorkspaceInputEnvelope
+    set?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    disconnect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    delete?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    update?: TagUpdateWithWhereUniqueWithoutWorkspaceInput | TagUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: TagUpdateManyWithWhereWithoutWorkspaceInput | TagUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: TagScalarWhereInput | TagScalarWhereInput[]
+  }
+
+  export type WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput> | WorkspaceMemberCreateWithoutWorkspaceInput[] | WorkspaceMemberUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: WorkspaceMemberCreateOrConnectWithoutWorkspaceInput | WorkspaceMemberCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: WorkspaceMemberUpsertWithWhereUniqueWithoutWorkspaceInput | WorkspaceMemberUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: WorkspaceMemberCreateManyWorkspaceInputEnvelope
+    set?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    disconnect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    delete?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    connect?: WorkspaceMemberWhereUniqueInput | WorkspaceMemberWhereUniqueInput[]
+    update?: WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput | WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput | WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+  }
+
+  export type LeadUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<LeadCreateWithoutWorkspaceInput, LeadUncheckedCreateWithoutWorkspaceInput> | LeadCreateWithoutWorkspaceInput[] | LeadUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: LeadCreateOrConnectWithoutWorkspaceInput | LeadCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: LeadUpsertWithWhereUniqueWithoutWorkspaceInput | LeadUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: LeadCreateManyWorkspaceInputEnvelope
+    set?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    disconnect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    delete?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    connect?: LeadWhereUniqueInput | LeadWhereUniqueInput[]
+    update?: LeadUpdateWithWhereUniqueWithoutWorkspaceInput | LeadUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: LeadUpdateManyWithWhereWithoutWorkspaceInput | LeadUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: LeadScalarWhereInput | LeadScalarWhereInput[]
+  }
+
+  export type CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<CompanyCreateWithoutWorkspaceInput, CompanyUncheckedCreateWithoutWorkspaceInput> | CompanyCreateWithoutWorkspaceInput[] | CompanyUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CompanyCreateOrConnectWithoutWorkspaceInput | CompanyCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: CompanyUpsertWithWhereUniqueWithoutWorkspaceInput | CompanyUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: CompanyCreateManyWorkspaceInputEnvelope
+    set?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+    disconnect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+    delete?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+    connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+    update?: CompanyUpdateWithWhereUniqueWithoutWorkspaceInput | CompanyUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: CompanyUpdateManyWithWhereWithoutWorkspaceInput | CompanyUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
+  }
+
+  export type TagUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<TagCreateWithoutWorkspaceInput, TagUncheckedCreateWithoutWorkspaceInput> | TagCreateWithoutWorkspaceInput[] | TagUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: TagCreateOrConnectWithoutWorkspaceInput | TagCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: TagUpsertWithWhereUniqueWithoutWorkspaceInput | TagUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: TagCreateManyWorkspaceInputEnvelope
+    set?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    disconnect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    delete?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    connect?: TagWhereUniqueInput | TagWhereUniqueInput[]
+    update?: TagUpdateWithWhereUniqueWithoutWorkspaceInput | TagUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: TagUpdateManyWithWhereWithoutWorkspaceInput | TagUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: TagScalarWhereInput | TagScalarWhereInput[]
+  }
+
+  export type WorkspaceCreateNestedOneWithoutMembersInput = {
+    create?: XOR<WorkspaceCreateWithoutMembersInput, WorkspaceUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutMembersInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutMembersInput = {
+    create?: XOR<UserCreateWithoutMembersInput, UserUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMembersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumWorkspaceRoleFieldUpdateOperationsInput = {
+    set?: $Enums.WorkspaceRole
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutMembersNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutMembersInput, WorkspaceUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutMembersInput
+    upsert?: WorkspaceUpsertWithoutMembersInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutMembersInput, WorkspaceUpdateWithoutMembersInput>, WorkspaceUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutMembersNestedInput = {
+    create?: XOR<UserCreateWithoutMembersInput, UserUncheckedCreateWithoutMembersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMembersInput
+    upsert?: UserUpsertWithoutMembersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMembersInput, UserUpdateWithoutMembersInput>, UserUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type WorkspaceCreateNestedOneWithoutCompaniesInput = {
+    create?: XOR<WorkspaceCreateWithoutCompaniesInput, WorkspaceUncheckedCreateWithoutCompaniesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutCompaniesInput
+    connect?: WorkspaceWhereUniqueInput
   }
 
   export type ContactCreateNestedManyWithoutCompanyInput = {
@@ -24185,6 +26272,14 @@ export namespace Prisma {
 
   export type NullableBoolFieldUpdateOperationsInput = {
     set?: boolean | null
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutCompaniesInput, WorkspaceUncheckedCreateWithoutCompaniesInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutCompaniesInput
+    upsert?: WorkspaceUpsertWithoutCompaniesInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutCompaniesInput, WorkspaceUpdateWithoutCompaniesInput>, WorkspaceUncheckedUpdateWithoutCompaniesInput>
   }
 
   export type ContactUpdateManyWithoutCompanyNestedInput = {
@@ -24421,6 +26516,12 @@ export namespace Prisma {
     update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutSourcesInput, CompanyUpdateWithoutSourcesInput>, CompanyUncheckedUpdateWithoutSourcesInput>
   }
 
+  export type WorkspaceCreateNestedOneWithoutLeadsInput = {
+    create?: XOR<WorkspaceCreateWithoutLeadsInput, WorkspaceUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutLeadsInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
   export type CompanyCreateNestedOneWithoutLeadInput = {
     create?: XOR<CompanyCreateWithoutLeadInput, CompanyUncheckedCreateWithoutLeadInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutLeadInput
@@ -24517,6 +26618,14 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutLeadsNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutLeadsInput, WorkspaceUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutLeadsInput
+    upsert?: WorkspaceUpsertWithoutLeadsInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutLeadsInput, WorkspaceUpdateWithoutLeadsInput>, WorkspaceUncheckedUpdateWithoutLeadsInput>
   }
 
   export type CompanyUpdateOneRequiredWithoutLeadNestedInput = {
@@ -24861,6 +26970,12 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRemindersInput, UserUpdateWithoutRemindersInput>, UserUncheckedUpdateWithoutRemindersInput>
   }
 
+  export type WorkspaceCreateNestedOneWithoutTagsInput = {
+    create?: XOR<WorkspaceCreateWithoutTagsInput, WorkspaceUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutTagsInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
   export type CompanyTagCreateNestedManyWithoutTagInput = {
     create?: XOR<CompanyTagCreateWithoutTagInput, CompanyTagUncheckedCreateWithoutTagInput> | CompanyTagCreateWithoutTagInput[] | CompanyTagUncheckedCreateWithoutTagInput[]
     connectOrCreate?: CompanyTagCreateOrConnectWithoutTagInput | CompanyTagCreateOrConnectWithoutTagInput[]
@@ -24887,6 +27002,14 @@ export namespace Prisma {
     connectOrCreate?: LeadTagCreateOrConnectWithoutTagInput | LeadTagCreateOrConnectWithoutTagInput[]
     createMany?: LeadTagCreateManyTagInputEnvelope
     connect?: LeadTagWhereUniqueInput | LeadTagWhereUniqueInput[]
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutTagsNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutTagsInput, WorkspaceUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutTagsInput
+    upsert?: WorkspaceUpsertWithoutTagsInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutTagsInput, WorkspaceUpdateWithoutTagsInput>, WorkspaceUncheckedUpdateWithoutTagsInput>
   }
 
   export type CompanyTagUpdateManyWithoutTagNestedInput = {
@@ -25168,6 +27291,23 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumWorkspaceRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceRole | EnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceRoleFilter<$PrismaModel> | $Enums.WorkspaceRole
+  }
+
+  export type NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WorkspaceRole | EnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    notIn?: $Enums.WorkspaceRole[] | ListEnumWorkspaceRoleFieldRefInput<$PrismaModel>
+    not?: NestedEnumWorkspaceRoleWithAggregatesFilter<$PrismaModel> | $Enums.WorkspaceRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWorkspaceRoleFilter<$PrismaModel>
+    _max?: NestedEnumWorkspaceRoleFilter<$PrismaModel>
   }
 
   export type NestedEnumCompanyNicheFilter<$PrismaModel = never> = {
@@ -25495,6 +27635,32 @@ export namespace Prisma {
     _max?: NestedEnumActivityEventTypeFilter<$PrismaModel>
   }
 
+  export type WorkspaceMemberCreateWithoutUserInput = {
+    id?: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutMembersInput
+  }
+
+  export type WorkspaceMemberUncheckedCreateWithoutUserInput = {
+    id?: string
+    workspaceId: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceMemberCreateOrConnectWithoutUserInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    create: XOR<WorkspaceMemberCreateWithoutUserInput, WorkspaceMemberUncheckedCreateWithoutUserInput>
+  }
+
+  export type WorkspaceMemberCreateManyUserInputEnvelope = {
+    data: WorkspaceMemberCreateManyUserInput | WorkspaceMemberCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type LeadCreateWithoutOwnerInput = {
     id?: string
     status?: $Enums.LeadStatus
@@ -25507,6 +27673,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutLeadsInput
     company: CompanyCreateNestedOneWithoutLeadInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutLeadInput
     activities?: ActivityCreateNestedManyWithoutLeadInput
@@ -25526,6 +27693,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutLeadInput
@@ -25549,6 +27717,7 @@ export namespace Prisma {
     id?: string
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     lead: LeadCreateNestedOneWithoutActivitiesInput
   }
@@ -25558,6 +27727,7 @@ export namespace Prisma {
     leadId: string
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -25577,6 +27747,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
     lead: LeadCreateNestedOneWithoutRemindersInput
   }
@@ -25588,6 +27759,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -25621,6 +27793,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lead: LeadCreateNestedOneWithoutOutreachDraftsInput
@@ -25649,6 +27822,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25661,6 +27835,34 @@ export namespace Prisma {
   export type OutreachDraftCreateManyAuthorInputEnvelope = {
     data: OutreachDraftCreateManyAuthorInput | OutreachDraftCreateManyAuthorInput[]
     skipDuplicates?: boolean
+  }
+
+  export type WorkspaceMemberUpsertWithWhereUniqueWithoutUserInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    update: XOR<WorkspaceMemberUpdateWithoutUserInput, WorkspaceMemberUncheckedUpdateWithoutUserInput>
+    create: XOR<WorkspaceMemberCreateWithoutUserInput, WorkspaceMemberUncheckedCreateWithoutUserInput>
+  }
+
+  export type WorkspaceMemberUpdateWithWhereUniqueWithoutUserInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    data: XOR<WorkspaceMemberUpdateWithoutUserInput, WorkspaceMemberUncheckedUpdateWithoutUserInput>
+  }
+
+  export type WorkspaceMemberUpdateManyWithWhereWithoutUserInput = {
+    where: WorkspaceMemberScalarWhereInput
+    data: XOR<WorkspaceMemberUpdateManyMutationInput, WorkspaceMemberUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type WorkspaceMemberScalarWhereInput = {
+    AND?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+    OR?: WorkspaceMemberScalarWhereInput[]
+    NOT?: WorkspaceMemberScalarWhereInput | WorkspaceMemberScalarWhereInput[]
+    id?: StringFilter<"WorkspaceMember"> | string
+    workspaceId?: StringFilter<"WorkspaceMember"> | string
+    userId?: StringFilter<"WorkspaceMember"> | string
+    role?: EnumWorkspaceRoleFilter<"WorkspaceMember"> | $Enums.WorkspaceRole
+    createdAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
+    updatedAt?: DateTimeFilter<"WorkspaceMember"> | Date | string
   }
 
   export type LeadUpsertWithWhereUniqueWithoutOwnerInput = {
@@ -25694,6 +27896,7 @@ export namespace Prisma {
     wonAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     lostReason?: StringNullableFilter<"Lead"> | string | null
     notes?: StringNullableFilter<"Lead"> | string | null
+    workspaceId?: StringFilter<"Lead"> | string
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
   }
@@ -25723,6 +27926,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Activity"> | string | null
     eventType?: EnumActivityEventTypeFilter<"Activity"> | $Enums.ActivityEventType
     metadata?: JsonNullableFilter<"Activity">
+    workspaceId?: StringFilter<"Activity"> | string
     createdAt?: DateTimeFilter<"Activity"> | Date | string
   }
 
@@ -25753,6 +27957,7 @@ export namespace Prisma {
     note?: StringNullableFilter<"Reminder"> | string | null
     done?: BoolFilter<"Reminder"> | boolean
     doneAt?: DateTimeNullableFilter<"Reminder"> | Date | string | null
+    workspaceId?: StringFilter<"Reminder"> | string
     createdAt?: DateTimeFilter<"Reminder"> | Date | string
   }
 
@@ -25798,8 +28003,515 @@ export namespace Prisma {
     inputHash?: StringNullableFilter<"OutreachDraft"> | string | null
     outputSchemaVersion?: StringNullableFilter<"OutreachDraft"> | string | null
     evidenceRefs?: JsonNullableFilter<"OutreachDraft">
+    workspaceId?: StringFilter<"OutreachDraft"> | string
     createdAt?: DateTimeFilter<"OutreachDraft"> | Date | string
     updatedAt?: DateTimeFilter<"OutreachDraft"> | Date | string
+  }
+
+  export type WorkspaceMemberCreateWithoutWorkspaceInput = {
+    id?: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutMembersInput
+  }
+
+  export type WorkspaceMemberUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    userId: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type WorkspaceMemberCreateOrConnectWithoutWorkspaceInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    create: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type WorkspaceMemberCreateManyWorkspaceInputEnvelope = {
+    data: WorkspaceMemberCreateManyWorkspaceInput | WorkspaceMemberCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LeadCreateWithoutWorkspaceInput = {
+    id?: string
+    status?: $Enums.LeadStatus
+    pipelineStage?: $Enums.PipelineStage
+    priority?: number
+    qualifiedAt?: Date | string | null
+    lostAt?: Date | string | null
+    wonAt?: Date | string | null
+    lostReason?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutLeadInput
+    owner?: UserCreateNestedOneWithoutLeadsInput
+    outreachDrafts?: OutreachDraftCreateNestedManyWithoutLeadInput
+    activities?: ActivityCreateNestedManyWithoutLeadInput
+    reminders?: ReminderCreateNestedManyWithoutLeadInput
+    gmailThreads?: GmailThreadCreateNestedManyWithoutLeadInput
+    tags?: LeadTagCreateNestedManyWithoutLeadInput
+  }
+
+  export type LeadUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    companyId: string
+    ownerId?: string | null
+    status?: $Enums.LeadStatus
+    pipelineStage?: $Enums.PipelineStage
+    priority?: number
+    qualifiedAt?: Date | string | null
+    lostAt?: Date | string | null
+    wonAt?: Date | string | null
+    lostReason?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutLeadInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutLeadInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutLeadInput
+    gmailThreads?: GmailThreadUncheckedCreateNestedManyWithoutLeadInput
+    tags?: LeadTagUncheckedCreateNestedManyWithoutLeadInput
+  }
+
+  export type LeadCreateOrConnectWithoutWorkspaceInput = {
+    where: LeadWhereUniqueInput
+    create: XOR<LeadCreateWithoutWorkspaceInput, LeadUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type LeadCreateManyWorkspaceInputEnvelope = {
+    data: LeadCreateManyWorkspaceInput | LeadCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CompanyCreateWithoutWorkspaceInput = {
+    id?: string
+    name: string
+    slug: string
+    niche: $Enums.CompanyNiche
+    region?: $Enums.CompanyRegion | null
+    city?: string | null
+    address?: string | null
+    postalCode?: string | null
+    province?: string
+    website?: string | null
+    domain?: string | null
+    phone?: string | null
+    email?: string | null
+    googleMapsUrl?: string | null
+    googlePlaceId?: string | null
+    googleRating?: number | null
+    googleReviewCount?: number | null
+    description?: string | null
+    notes?: string | null
+    hasModernSite?: boolean | null
+    hasChatbot?: boolean | null
+    hasBookingSystem?: boolean | null
+    hasGoogleAds?: boolean | null
+    hasSocialMedia?: boolean | null
+    socialMediaLinks?: NullableJsonNullValueInput | InputJsonValue
+    neqNumber?: string | null
+    yearFounded?: number | null
+    employeeCount?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    contacts?: ContactCreateNestedManyWithoutCompanyInput
+    sources?: SourceCreateNestedManyWithoutCompanyInput
+    lead?: LeadCreateNestedOneWithoutCompanyInput
+    websiteAudit?: WebsiteAuditCreateNestedOneWithoutCompanyInput
+    score?: ScoreCreateNestedOneWithoutCompanyInput
+    tags?: CompanyTagCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    name: string
+    slug: string
+    niche: $Enums.CompanyNiche
+    region?: $Enums.CompanyRegion | null
+    city?: string | null
+    address?: string | null
+    postalCode?: string | null
+    province?: string
+    website?: string | null
+    domain?: string | null
+    phone?: string | null
+    email?: string | null
+    googleMapsUrl?: string | null
+    googlePlaceId?: string | null
+    googleRating?: number | null
+    googleReviewCount?: number | null
+    description?: string | null
+    notes?: string | null
+    hasModernSite?: boolean | null
+    hasChatbot?: boolean | null
+    hasBookingSystem?: boolean | null
+    hasGoogleAds?: boolean | null
+    hasSocialMedia?: boolean | null
+    socialMediaLinks?: NullableJsonNullValueInput | InputJsonValue
+    neqNumber?: string | null
+    yearFounded?: number | null
+    employeeCount?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
+    sources?: SourceUncheckedCreateNestedManyWithoutCompanyInput
+    lead?: LeadUncheckedCreateNestedOneWithoutCompanyInput
+    websiteAudit?: WebsiteAuditUncheckedCreateNestedOneWithoutCompanyInput
+    score?: ScoreUncheckedCreateNestedOneWithoutCompanyInput
+    tags?: CompanyTagUncheckedCreateNestedManyWithoutCompanyInput
+  }
+
+  export type CompanyCreateOrConnectWithoutWorkspaceInput = {
+    where: CompanyWhereUniqueInput
+    create: XOR<CompanyCreateWithoutWorkspaceInput, CompanyUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type CompanyCreateManyWorkspaceInputEnvelope = {
+    data: CompanyCreateManyWorkspaceInput | CompanyCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TagCreateWithoutWorkspaceInput = {
+    id?: string
+    name: string
+    color?: string | null
+    createdAt?: Date | string
+    companies?: CompanyTagCreateNestedManyWithoutTagInput
+    leads?: LeadTagCreateNestedManyWithoutTagInput
+  }
+
+  export type TagUncheckedCreateWithoutWorkspaceInput = {
+    id?: string
+    name: string
+    color?: string | null
+    createdAt?: Date | string
+    companies?: CompanyTagUncheckedCreateNestedManyWithoutTagInput
+    leads?: LeadTagUncheckedCreateNestedManyWithoutTagInput
+  }
+
+  export type TagCreateOrConnectWithoutWorkspaceInput = {
+    where: TagWhereUniqueInput
+    create: XOR<TagCreateWithoutWorkspaceInput, TagUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type TagCreateManyWorkspaceInputEnvelope = {
+    data: TagCreateManyWorkspaceInput | TagCreateManyWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WorkspaceMemberUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    update: XOR<WorkspaceMemberUpdateWithoutWorkspaceInput, WorkspaceMemberUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<WorkspaceMemberCreateWithoutWorkspaceInput, WorkspaceMemberUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type WorkspaceMemberUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: WorkspaceMemberWhereUniqueInput
+    data: XOR<WorkspaceMemberUpdateWithoutWorkspaceInput, WorkspaceMemberUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type WorkspaceMemberUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: WorkspaceMemberScalarWhereInput
+    data: XOR<WorkspaceMemberUpdateManyMutationInput, WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type LeadUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: LeadWhereUniqueInput
+    update: XOR<LeadUpdateWithoutWorkspaceInput, LeadUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<LeadCreateWithoutWorkspaceInput, LeadUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type LeadUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: LeadWhereUniqueInput
+    data: XOR<LeadUpdateWithoutWorkspaceInput, LeadUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type LeadUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: LeadScalarWhereInput
+    data: XOR<LeadUpdateManyMutationInput, LeadUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type CompanyUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: CompanyWhereUniqueInput
+    update: XOR<CompanyUpdateWithoutWorkspaceInput, CompanyUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<CompanyCreateWithoutWorkspaceInput, CompanyUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type CompanyUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: CompanyWhereUniqueInput
+    data: XOR<CompanyUpdateWithoutWorkspaceInput, CompanyUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type CompanyUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: CompanyScalarWhereInput
+    data: XOR<CompanyUpdateManyMutationInput, CompanyUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type CompanyScalarWhereInput = {
+    AND?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
+    OR?: CompanyScalarWhereInput[]
+    NOT?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
+    id?: StringFilter<"Company"> | string
+    name?: StringFilter<"Company"> | string
+    slug?: StringFilter<"Company"> | string
+    niche?: EnumCompanyNicheFilter<"Company"> | $Enums.CompanyNiche
+    region?: EnumCompanyRegionNullableFilter<"Company"> | $Enums.CompanyRegion | null
+    city?: StringNullableFilter<"Company"> | string | null
+    address?: StringNullableFilter<"Company"> | string | null
+    postalCode?: StringNullableFilter<"Company"> | string | null
+    province?: StringFilter<"Company"> | string
+    website?: StringNullableFilter<"Company"> | string | null
+    domain?: StringNullableFilter<"Company"> | string | null
+    phone?: StringNullableFilter<"Company"> | string | null
+    email?: StringNullableFilter<"Company"> | string | null
+    googleMapsUrl?: StringNullableFilter<"Company"> | string | null
+    googlePlaceId?: StringNullableFilter<"Company"> | string | null
+    googleRating?: FloatNullableFilter<"Company"> | number | null
+    googleReviewCount?: IntNullableFilter<"Company"> | number | null
+    description?: StringNullableFilter<"Company"> | string | null
+    notes?: StringNullableFilter<"Company"> | string | null
+    hasModernSite?: BoolNullableFilter<"Company"> | boolean | null
+    hasChatbot?: BoolNullableFilter<"Company"> | boolean | null
+    hasBookingSystem?: BoolNullableFilter<"Company"> | boolean | null
+    hasGoogleAds?: BoolNullableFilter<"Company"> | boolean | null
+    hasSocialMedia?: BoolNullableFilter<"Company"> | boolean | null
+    socialMediaLinks?: JsonNullableFilter<"Company">
+    neqNumber?: StringNullableFilter<"Company"> | string | null
+    yearFounded?: IntNullableFilter<"Company"> | number | null
+    employeeCount?: StringNullableFilter<"Company"> | string | null
+    isActive?: BoolFilter<"Company"> | boolean
+    workspaceId?: StringFilter<"Company"> | string
+    createdAt?: DateTimeFilter<"Company"> | Date | string
+    updatedAt?: DateTimeFilter<"Company"> | Date | string
+  }
+
+  export type TagUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: TagWhereUniqueInput
+    update: XOR<TagUpdateWithoutWorkspaceInput, TagUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<TagCreateWithoutWorkspaceInput, TagUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type TagUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: TagWhereUniqueInput
+    data: XOR<TagUpdateWithoutWorkspaceInput, TagUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type TagUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: TagScalarWhereInput
+    data: XOR<TagUpdateManyMutationInput, TagUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type TagScalarWhereInput = {
+    AND?: TagScalarWhereInput | TagScalarWhereInput[]
+    OR?: TagScalarWhereInput[]
+    NOT?: TagScalarWhereInput | TagScalarWhereInput[]
+    id?: StringFilter<"Tag"> | string
+    name?: StringFilter<"Tag"> | string
+    color?: StringNullableFilter<"Tag"> | string | null
+    workspaceId?: StringFilter<"Tag"> | string
+    createdAt?: DateTimeFilter<"Tag"> | Date | string
+  }
+
+  export type WorkspaceCreateWithoutMembersInput = {
+    id?: string
+    name: string
+    slug: string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    tags?: TagCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutMembersInput = {
+    id?: string
+    name: string
+    slug: string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    tags?: TagUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutMembersInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutMembersInput, WorkspaceUncheckedCreateWithoutMembersInput>
+  }
+
+  export type UserCreateWithoutMembersInput = {
+    id?: string
+    email: string
+    passwordHash?: string | null
+    name?: string | null
+    avatarUrl?: string | null
+    locale?: string
+    notifyTelegram?: boolean
+    notifyDiscord?: boolean
+    googleId?: string | null
+    gmailAccessToken?: string | null
+    gmailRefreshToken?: string | null
+    gmailTokenExpiry?: Date | string | null
+    gmailEmail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadCreateNestedManyWithoutOwnerInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    reminders?: ReminderCreateNestedManyWithoutUserInput
+    outreachDrafts?: OutreachDraftCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserUncheckedCreateWithoutMembersInput = {
+    id?: string
+    email: string
+    passwordHash?: string | null
+    name?: string | null
+    avatarUrl?: string | null
+    locale?: string
+    notifyTelegram?: boolean
+    notifyDiscord?: boolean
+    googleId?: string | null
+    gmailAccessToken?: string | null
+    gmailRefreshToken?: string | null
+    gmailTokenExpiry?: Date | string | null
+    gmailEmail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
+    outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserCreateOrConnectWithoutMembersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMembersInput, UserUncheckedCreateWithoutMembersInput>
+  }
+
+  export type WorkspaceUpsertWithoutMembersInput = {
+    update: XOR<WorkspaceUpdateWithoutMembersInput, WorkspaceUncheckedUpdateWithoutMembersInput>
+    create: XOR<WorkspaceCreateWithoutMembersInput, WorkspaceUncheckedCreateWithoutMembersInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutMembersInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutMembersInput, WorkspaceUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type WorkspaceUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    tags?: TagUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    tags?: TagUncheckedUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type UserUpsertWithoutMembersInput = {
+    update: XOR<UserUpdateWithoutMembersInput, UserUncheckedUpdateWithoutMembersInput>
+    create: XOR<UserCreateWithoutMembersInput, UserUncheckedCreateWithoutMembersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMembersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMembersInput, UserUncheckedUpdateWithoutMembersInput>
+  }
+
+  export type UserUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: StringFieldUpdateOperationsInput | string
+    notifyTelegram?: BoolFieldUpdateOperationsInput | boolean
+    notifyDiscord?: BoolFieldUpdateOperationsInput | boolean
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    gmailAccessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    gmailRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    gmailTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUpdateManyWithoutOwnerNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUpdateManyWithoutUserNestedInput
+    outreachDrafts?: OutreachDraftUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    locale?: StringFieldUpdateOperationsInput | string
+    notifyTelegram?: BoolFieldUpdateOperationsInput | boolean
+    notifyDiscord?: BoolFieldUpdateOperationsInput | boolean
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    gmailAccessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    gmailRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    gmailTokenExpiry?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
+    outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type WorkspaceCreateWithoutCompaniesInput = {
+    id?: string
+    name: string
+    slug: string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    leads?: LeadCreateNestedManyWithoutWorkspaceInput
+    tags?: TagCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutCompaniesInput = {
+    id?: string
+    name: string
+    slug: string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    leads?: LeadUncheckedCreateNestedManyWithoutWorkspaceInput
+    tags?: TagUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutCompaniesInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutCompaniesInput, WorkspaceUncheckedCreateWithoutCompaniesInput>
   }
 
   export type ContactCreateWithoutCompanyInput = {
@@ -25896,6 +28608,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutLeadsInput
     owner?: UserCreateNestedOneWithoutLeadsInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutLeadInput
     activities?: ActivityCreateNestedManyWithoutLeadInput
@@ -25915,6 +28628,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutLeadInput
@@ -25955,6 +28669,7 @@ export namespace Prisma {
     summary?: string | null
     summaryGeneratedAt?: Date | string | null
     crawlError?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25985,6 +28700,7 @@ export namespace Prisma {
     summary?: string | null
     summaryGeneratedAt?: Date | string | null
     crawlError?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26008,6 +28724,7 @@ export namespace Prisma {
     globalScore?: number
     complianceFlags?: ScoreCreatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: boolean
+    workspaceId: string
     scoredAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26026,6 +28743,7 @@ export namespace Prisma {
     globalScore?: number
     complianceFlags?: ScoreCreatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: boolean
+    workspaceId: string
     scoredAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26051,6 +28769,41 @@ export namespace Prisma {
   export type CompanyTagCreateManyCompanyInputEnvelope = {
     data: CompanyTagCreateManyCompanyInput | CompanyTagCreateManyCompanyInput[]
     skipDuplicates?: boolean
+  }
+
+  export type WorkspaceUpsertWithoutCompaniesInput = {
+    update: XOR<WorkspaceUpdateWithoutCompaniesInput, WorkspaceUncheckedUpdateWithoutCompaniesInput>
+    create: XOR<WorkspaceCreateWithoutCompaniesInput, WorkspaceUncheckedCreateWithoutCompaniesInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutCompaniesInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutCompaniesInput, WorkspaceUncheckedUpdateWithoutCompaniesInput>
+  }
+
+  export type WorkspaceUpdateWithoutCompaniesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    leads?: LeadUpdateManyWithoutWorkspaceNestedInput
+    tags?: TagUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutCompaniesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    leads?: LeadUncheckedUpdateManyWithoutWorkspaceNestedInput
+    tags?: TagUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ContactUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -26146,6 +28899,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutLeadsNestedInput
     owner?: UserUpdateOneWithoutLeadsNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutLeadNestedInput
     activities?: ActivityUpdateManyWithoutLeadNestedInput
@@ -26165,6 +28919,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutLeadNestedInput
@@ -26211,6 +28966,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     summaryGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     crawlError?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26241,6 +28997,7 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     summaryGeneratedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     crawlError?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26270,6 +29027,7 @@ export namespace Prisma {
     globalScore?: IntFieldUpdateOperationsInput | number
     complianceFlags?: ScoreUpdatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     scoredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26288,6 +29046,7 @@ export namespace Prisma {
     globalScore?: IntFieldUpdateOperationsInput | number
     complianceFlags?: ScoreUpdatecomplianceFlagsInput | $Enums.ComplianceFlag[]
     requiresHumanReview?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     scoredAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26348,6 +29107,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     sources?: SourceCreateNestedManyWithoutCompanyInput
     lead?: LeadCreateNestedOneWithoutCompanyInput
     websiteAudit?: WebsiteAuditCreateNestedOneWithoutCompanyInput
@@ -26385,6 +29145,7 @@ export namespace Prisma {
     yearFounded?: number | null
     employeeCount?: string | null
     isActive?: boolean
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     sources?: SourceUncheckedCreateNestedManyWithoutCompanyInput
@@ -26419,6 +29180,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     lead: LeadCreateNestedOneWithoutOutreachDraftsInput
@@ -26447,6 +29209,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26504,6 +29267,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     sources?: SourceUpdateManyWithoutCompanyNestedInput
     lead?: LeadUpdateOneWithoutCompanyNestedInput
     websiteAudit?: WebsiteAuditUpdateOneWithoutCompanyNestedInput
@@ -26541,6 +29305,7 @@ export namespace Prisma {
     yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
     employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sources?: SourceUncheckedUpdateManyWithoutCompanyNestedInput
@@ -26598,6 +29363,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCreateNestedManyWithoutCompanyInput
     lead?: LeadCreateNestedOneWithoutCompanyInput
     websiteAudit?: WebsiteAuditCreateNestedOneWithoutCompanyInput
@@ -26635,6 +29401,7 @@ export namespace Prisma {
     yearFounded?: number | null
     employeeCount?: string | null
     isActive?: boolean
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
@@ -26692,6 +29459,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactUpdateManyWithoutCompanyNestedInput
     lead?: LeadUpdateOneWithoutCompanyNestedInput
     websiteAudit?: WebsiteAuditUpdateOneWithoutCompanyNestedInput
@@ -26729,6 +29497,7 @@ export namespace Prisma {
     yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
     employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
@@ -26736,6 +29505,35 @@ export namespace Prisma {
     websiteAudit?: WebsiteAuditUncheckedUpdateOneWithoutCompanyNestedInput
     score?: ScoreUncheckedUpdateOneWithoutCompanyNestedInput
     tags?: CompanyTagUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type WorkspaceCreateWithoutLeadsInput = {
+    id?: string
+    name: string
+    slug: string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+    tags?: TagCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutLeadsInput = {
+    id?: string
+    name: string
+    slug: string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+    tags?: TagUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutLeadsInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutLeadsInput, WorkspaceUncheckedCreateWithoutLeadsInput>
   }
 
   export type CompanyCreateWithoutLeadInput = {
@@ -26770,6 +29568,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCreateNestedManyWithoutCompanyInput
     sources?: SourceCreateNestedManyWithoutCompanyInput
     websiteAudit?: WebsiteAuditCreateNestedOneWithoutCompanyInput
@@ -26807,6 +29606,7 @@ export namespace Prisma {
     yearFounded?: number | null
     employeeCount?: string | null
     isActive?: boolean
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
@@ -26837,6 +29637,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutUserInput
     activities?: ActivityCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutAuthorInput
@@ -26858,6 +29659,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutAuthorInput
@@ -26888,6 +29690,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     contact?: ContactCreateNestedOneWithoutOutreachDraftsInput
@@ -26916,6 +29719,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26934,6 +29738,7 @@ export namespace Prisma {
     id?: string
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     user?: UserCreateNestedOneWithoutActivitiesInput
   }
@@ -26943,6 +29748,7 @@ export namespace Prisma {
     userId?: string | null
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -26962,6 +29768,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutRemindersInput
   }
@@ -26973,6 +29780,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -26996,6 +29804,7 @@ export namespace Prisma {
     lastSyncedAt?: Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27010,6 +29819,7 @@ export namespace Prisma {
     lastSyncedAt?: Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27040,6 +29850,41 @@ export namespace Prisma {
   export type LeadTagCreateManyLeadInputEnvelope = {
     data: LeadTagCreateManyLeadInput | LeadTagCreateManyLeadInput[]
     skipDuplicates?: boolean
+  }
+
+  export type WorkspaceUpsertWithoutLeadsInput = {
+    update: XOR<WorkspaceUpdateWithoutLeadsInput, WorkspaceUncheckedUpdateWithoutLeadsInput>
+    create: XOR<WorkspaceCreateWithoutLeadsInput, WorkspaceUncheckedCreateWithoutLeadsInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutLeadsInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutLeadsInput, WorkspaceUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type WorkspaceUpdateWithoutLeadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+    tags?: TagUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutLeadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
+    tags?: TagUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type CompanyUpsertWithoutLeadInput = {
@@ -27085,6 +29930,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactUpdateManyWithoutCompanyNestedInput
     sources?: SourceUpdateManyWithoutCompanyNestedInput
     websiteAudit?: WebsiteAuditUpdateOneWithoutCompanyNestedInput
@@ -27122,6 +29968,7 @@ export namespace Prisma {
     yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
     employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
@@ -27158,6 +30005,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutUserNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutAuthorNestedInput
@@ -27179,6 +30027,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutAuthorNestedInput
@@ -27262,6 +30111,7 @@ export namespace Prisma {
     lastSyncedAt?: DateTimeNullableFilter<"GmailThread"> | Date | string | null
     labels?: JsonNullableFilter<"GmailThread">
     snippet?: StringNullableFilter<"GmailThread"> | string | null
+    workspaceId?: StringFilter<"GmailThread"> | string
     createdAt?: DateTimeFilter<"GmailThread"> | Date | string
     updatedAt?: DateTimeFilter<"GmailThread"> | Date | string
   }
@@ -27322,6 +30172,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCreateNestedManyWithoutCompanyInput
     sources?: SourceCreateNestedManyWithoutCompanyInput
     lead?: LeadCreateNestedOneWithoutCompanyInput
@@ -27359,6 +30210,7 @@ export namespace Prisma {
     yearFounded?: number | null
     employeeCount?: string | null
     isActive?: boolean
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
@@ -27416,6 +30268,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactUpdateManyWithoutCompanyNestedInput
     sources?: SourceUpdateManyWithoutCompanyNestedInput
     lead?: LeadUpdateOneWithoutCompanyNestedInput
@@ -27453,6 +30306,7 @@ export namespace Prisma {
     yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
     employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
@@ -27494,6 +30348,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCreateNestedManyWithoutCompanyInput
     sources?: SourceCreateNestedManyWithoutCompanyInput
     lead?: LeadCreateNestedOneWithoutCompanyInput
@@ -27531,6 +30386,7 @@ export namespace Prisma {
     yearFounded?: number | null
     employeeCount?: string | null
     isActive?: boolean
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
@@ -27588,6 +30444,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactUpdateManyWithoutCompanyNestedInput
     sources?: SourceUpdateManyWithoutCompanyNestedInput
     lead?: LeadUpdateOneWithoutCompanyNestedInput
@@ -27625,6 +30482,7 @@ export namespace Prisma {
     yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
     employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
@@ -27646,6 +30504,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutLeadsInput
     company: CompanyCreateNestedOneWithoutLeadInput
     owner?: UserCreateNestedOneWithoutLeadsInput
     activities?: ActivityCreateNestedManyWithoutLeadInput
@@ -27666,6 +30525,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     activities?: ActivityUncheckedCreateNestedManyWithoutLeadInput
@@ -27736,6 +30596,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutUserInput
     leads?: LeadCreateNestedManyWithoutOwnerInput
     activities?: ActivityCreateNestedManyWithoutUserInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
@@ -27757,6 +30618,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
     leads?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
@@ -27790,6 +30652,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutLeadsNestedInput
     company?: CompanyUpdateOneRequiredWithoutLeadNestedInput
     owner?: UserUpdateOneWithoutLeadsNestedInput
     activities?: ActivityUpdateManyWithoutLeadNestedInput
@@ -27810,6 +30673,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activities?: ActivityUncheckedUpdateManyWithoutLeadNestedInput
@@ -27892,6 +30756,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutUserNestedInput
     leads?: LeadUpdateManyWithoutOwnerNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
@@ -27913,6 +30778,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
     leads?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
@@ -27930,6 +30796,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutLeadsInput
     company: CompanyCreateNestedOneWithoutLeadInput
     owner?: UserCreateNestedOneWithoutLeadsInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutLeadInput
@@ -27950,6 +30817,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutLeadInput
@@ -27986,6 +30854,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutLeadsNestedInput
     company?: CompanyUpdateOneRequiredWithoutLeadNestedInput
     owner?: UserUpdateOneWithoutLeadsNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutLeadNestedInput
@@ -28006,6 +30875,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutLeadNestedInput
@@ -28026,6 +30896,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutLeadsInput
     company: CompanyCreateNestedOneWithoutLeadInput
     owner?: UserCreateNestedOneWithoutLeadsInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutLeadInput
@@ -28046,6 +30917,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutLeadInput
@@ -28075,6 +30947,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutUserInput
     leads?: LeadCreateNestedManyWithoutOwnerInput
     reminders?: ReminderCreateNestedManyWithoutUserInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutAuthorInput
@@ -28096,6 +30969,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
     leads?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     reminders?: ReminderUncheckedCreateNestedManyWithoutUserInput
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutAuthorInput
@@ -28129,6 +31003,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutLeadsNestedInput
     company?: CompanyUpdateOneRequiredWithoutLeadNestedInput
     owner?: UserUpdateOneWithoutLeadsNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutLeadNestedInput
@@ -28149,6 +31024,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutLeadNestedInput
@@ -28184,6 +31060,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutUserNestedInput
     leads?: LeadUpdateManyWithoutOwnerNestedInput
     reminders?: ReminderUpdateManyWithoutUserNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutAuthorNestedInput
@@ -28205,6 +31082,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
     leads?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     reminders?: ReminderUncheckedUpdateManyWithoutUserNestedInput
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutAuthorNestedInput
@@ -28222,6 +31100,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutLeadsInput
     company: CompanyCreateNestedOneWithoutLeadInput
     owner?: UserCreateNestedOneWithoutLeadsInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutLeadInput
@@ -28242,6 +31121,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutLeadInput
@@ -28271,6 +31151,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutUserInput
     leads?: LeadCreateNestedManyWithoutOwnerInput
     activities?: ActivityCreateNestedManyWithoutUserInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutAuthorInput
@@ -28292,6 +31173,7 @@ export namespace Prisma {
     gmailEmail?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutUserInput
     leads?: LeadUncheckedCreateNestedManyWithoutOwnerInput
     activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutAuthorInput
@@ -28325,6 +31207,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutLeadsNestedInput
     company?: CompanyUpdateOneRequiredWithoutLeadNestedInput
     owner?: UserUpdateOneWithoutLeadsNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutLeadNestedInput
@@ -28345,6 +31228,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutLeadNestedInput
@@ -28380,6 +31264,7 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutUserNestedInput
     leads?: LeadUpdateManyWithoutOwnerNestedInput
     activities?: ActivityUpdateManyWithoutUserNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutAuthorNestedInput
@@ -28401,9 +31286,39 @@ export namespace Prisma {
     gmailEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutUserNestedInput
     leads?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
     activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type WorkspaceCreateWithoutTagsInput = {
+    id?: string
+    name: string
+    slug: string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberCreateNestedManyWithoutWorkspaceInput
+    leads?: LeadCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutTagsInput = {
+    id?: string
+    name: string
+    slug: string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: WorkspaceMemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    leads?: LeadUncheckedCreateNestedManyWithoutWorkspaceInput
+    companies?: CompanyUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutTagsInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutTagsInput, WorkspaceUncheckedCreateWithoutTagsInput>
   }
 
   export type CompanyTagCreateWithoutTagInput = {
@@ -28440,6 +31355,41 @@ export namespace Prisma {
   export type LeadTagCreateManyTagInputEnvelope = {
     data: LeadTagCreateManyTagInput | LeadTagCreateManyTagInput[]
     skipDuplicates?: boolean
+  }
+
+  export type WorkspaceUpsertWithoutTagsInput = {
+    update: XOR<WorkspaceUpdateWithoutTagsInput, WorkspaceUncheckedUpdateWithoutTagsInput>
+    create: XOR<WorkspaceCreateWithoutTagsInput, WorkspaceUncheckedCreateWithoutTagsInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutTagsInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutTagsInput, WorkspaceUncheckedUpdateWithoutTagsInput>
+  }
+
+  export type WorkspaceUpdateWithoutTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUpdateManyWithoutWorkspaceNestedInput
+    leads?: LeadUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutTagsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    leads?: LeadUncheckedUpdateManyWithoutWorkspaceNestedInput
+    companies?: CompanyUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type CompanyTagUpsertWithWhereUniqueWithoutTagInput = {
@@ -28506,6 +31456,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCompaniesInput
     contacts?: ContactCreateNestedManyWithoutCompanyInput
     sources?: SourceCreateNestedManyWithoutCompanyInput
     lead?: LeadCreateNestedOneWithoutCompanyInput
@@ -28543,6 +31494,7 @@ export namespace Prisma {
     yearFounded?: number | null
     employeeCount?: string | null
     isActive?: boolean
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     contacts?: ContactUncheckedCreateNestedManyWithoutCompanyInput
@@ -28562,6 +31514,7 @@ export namespace Prisma {
     name: string
     color?: string | null
     createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTagsInput
     leads?: LeadTagCreateNestedManyWithoutTagInput
   }
 
@@ -28569,6 +31522,7 @@ export namespace Prisma {
     id?: string
     name: string
     color?: string | null
+    workspaceId: string
     createdAt?: Date | string
     leads?: LeadTagUncheckedCreateNestedManyWithoutTagInput
   }
@@ -28621,6 +31575,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCompaniesNestedInput
     contacts?: ContactUpdateManyWithoutCompanyNestedInput
     sources?: SourceUpdateManyWithoutCompanyNestedInput
     lead?: LeadUpdateOneWithoutCompanyNestedInput
@@ -28658,6 +31613,7 @@ export namespace Prisma {
     yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
     employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
@@ -28683,6 +31639,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTagsNestedInput
     leads?: LeadTagUpdateManyWithoutTagNestedInput
   }
 
@@ -28690,6 +31647,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leads?: LeadTagUncheckedUpdateManyWithoutTagNestedInput
   }
@@ -28706,6 +31664,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutLeadsInput
     company: CompanyCreateNestedOneWithoutLeadInput
     owner?: UserCreateNestedOneWithoutLeadsInput
     outreachDrafts?: OutreachDraftCreateNestedManyWithoutLeadInput
@@ -28726,6 +31685,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     outreachDrafts?: OutreachDraftUncheckedCreateNestedManyWithoutLeadInput
@@ -28744,6 +31704,7 @@ export namespace Prisma {
     name: string
     color?: string | null
     createdAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTagsInput
     companies?: CompanyTagCreateNestedManyWithoutTagInput
   }
 
@@ -28751,6 +31712,7 @@ export namespace Prisma {
     id?: string
     name: string
     color?: string | null
+    workspaceId: string
     createdAt?: Date | string
     companies?: CompanyTagUncheckedCreateNestedManyWithoutTagInput
   }
@@ -28783,6 +31745,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutLeadsNestedInput
     company?: CompanyUpdateOneRequiredWithoutLeadNestedInput
     owner?: UserUpdateOneWithoutLeadsNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutLeadNestedInput
@@ -28803,6 +31766,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutLeadNestedInput
@@ -28827,6 +31791,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTagsNestedInput
     companies?: CompanyTagUpdateManyWithoutTagNestedInput
   }
 
@@ -28834,8 +31799,17 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companies?: CompanyTagUncheckedUpdateManyWithoutTagNestedInput
+  }
+
+  export type WorkspaceMemberCreateManyUserInput = {
+    id?: string
+    workspaceId: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type LeadCreateManyOwnerInput = {
@@ -28849,6 +31823,7 @@ export namespace Prisma {
     wonAt?: Date | string | null
     lostReason?: string | null
     notes?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28858,6 +31833,7 @@ export namespace Prisma {
     leadId: string
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -28868,6 +31844,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -28893,8 +31870,33 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type WorkspaceMemberUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
+  }
+
+  export type WorkspaceMemberUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceMemberUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LeadUpdateWithoutOwnerInput = {
@@ -28909,6 +31911,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutLeadsNestedInput
     company?: CompanyUpdateOneRequiredWithoutLeadNestedInput
     outreachDrafts?: OutreachDraftUpdateManyWithoutLeadNestedInput
     activities?: ActivityUpdateManyWithoutLeadNestedInput
@@ -28928,6 +31931,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutLeadNestedInput
@@ -28948,6 +31952,7 @@ export namespace Prisma {
     wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lostReason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28956,6 +31961,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutActivitiesNestedInput
   }
@@ -28965,6 +31971,7 @@ export namespace Prisma {
     leadId?: StringFieldUpdateOperationsInput | string
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28973,6 +31980,7 @@ export namespace Prisma {
     leadId?: StringFieldUpdateOperationsInput | string
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28982,6 +31990,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutRemindersNestedInput
   }
@@ -28993,6 +32002,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29003,6 +32013,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29026,6 +32037,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutOutreachDraftsNestedInput
@@ -29054,6 +32066,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29080,8 +32093,295 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceMemberCreateManyWorkspaceInput = {
+    id?: string
+    userId: string
+    role?: $Enums.WorkspaceRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCreateManyWorkspaceInput = {
+    id?: string
+    companyId: string
+    ownerId?: string | null
+    status?: $Enums.LeadStatus
+    pipelineStage?: $Enums.PipelineStage
+    priority?: number
+    qualifiedAt?: Date | string | null
+    lostAt?: Date | string | null
+    wonAt?: Date | string | null
+    lostReason?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CompanyCreateManyWorkspaceInput = {
+    id?: string
+    name: string
+    slug: string
+    niche: $Enums.CompanyNiche
+    region?: $Enums.CompanyRegion | null
+    city?: string | null
+    address?: string | null
+    postalCode?: string | null
+    province?: string
+    website?: string | null
+    domain?: string | null
+    phone?: string | null
+    email?: string | null
+    googleMapsUrl?: string | null
+    googlePlaceId?: string | null
+    googleRating?: number | null
+    googleReviewCount?: number | null
+    description?: string | null
+    notes?: string | null
+    hasModernSite?: boolean | null
+    hasChatbot?: boolean | null
+    hasBookingSystem?: boolean | null
+    hasGoogleAds?: boolean | null
+    hasSocialMedia?: boolean | null
+    socialMediaLinks?: NullableJsonNullValueInput | InputJsonValue
+    neqNumber?: string | null
+    yearFounded?: number | null
+    employeeCount?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TagCreateManyWorkspaceInput = {
+    id?: string
+    name: string
+    color?: string | null
+    createdAt?: Date | string
+  }
+
+  export type WorkspaceMemberUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutMembersNestedInput
+  }
+
+  export type WorkspaceMemberUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WorkspaceMemberUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    role?: EnumWorkspaceRoleFieldUpdateOperationsInput | $Enums.WorkspaceRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    priority?: IntFieldUpdateOperationsInput | number
+    qualifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutLeadNestedInput
+    owner?: UserUpdateOneWithoutLeadsNestedInput
+    outreachDrafts?: OutreachDraftUpdateManyWithoutLeadNestedInput
+    activities?: ActivityUpdateManyWithoutLeadNestedInput
+    reminders?: ReminderUpdateManyWithoutLeadNestedInput
+    gmailThreads?: GmailThreadUpdateManyWithoutLeadNestedInput
+    tags?: LeadTagUpdateManyWithoutLeadNestedInput
+  }
+
+  export type LeadUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    priority?: IntFieldUpdateOperationsInput | number
+    qualifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    outreachDrafts?: OutreachDraftUncheckedUpdateManyWithoutLeadNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutLeadNestedInput
+    reminders?: ReminderUncheckedUpdateManyWithoutLeadNestedInput
+    gmailThreads?: GmailThreadUncheckedUpdateManyWithoutLeadNestedInput
+    tags?: LeadTagUncheckedUpdateManyWithoutLeadNestedInput
+  }
+
+  export type LeadUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+    pipelineStage?: EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+    priority?: IntFieldUpdateOperationsInput | number
+    qualifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    wonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lostReason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CompanyUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    niche?: EnumCompanyNicheFieldUpdateOperationsInput | $Enums.CompanyNiche
+    region?: NullableEnumCompanyRegionFieldUpdateOperationsInput | $Enums.CompanyRegion | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    domain?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    googlePlaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleReviewCount?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hasModernSite?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasChatbot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasBookingSystem?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasGoogleAds?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasSocialMedia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    socialMediaLinks?: NullableJsonNullValueInput | InputJsonValue
+    neqNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
+    employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contacts?: ContactUpdateManyWithoutCompanyNestedInput
+    sources?: SourceUpdateManyWithoutCompanyNestedInput
+    lead?: LeadUpdateOneWithoutCompanyNestedInput
+    websiteAudit?: WebsiteAuditUpdateOneWithoutCompanyNestedInput
+    score?: ScoreUpdateOneWithoutCompanyNestedInput
+    tags?: CompanyTagUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    niche?: EnumCompanyNicheFieldUpdateOperationsInput | $Enums.CompanyNiche
+    region?: NullableEnumCompanyRegionFieldUpdateOperationsInput | $Enums.CompanyRegion | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    domain?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    googlePlaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleReviewCount?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hasModernSite?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasChatbot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasBookingSystem?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasGoogleAds?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasSocialMedia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    socialMediaLinks?: NullableJsonNullValueInput | InputJsonValue
+    neqNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
+    employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contacts?: ContactUncheckedUpdateManyWithoutCompanyNestedInput
+    sources?: SourceUncheckedUpdateManyWithoutCompanyNestedInput
+    lead?: LeadUncheckedUpdateOneWithoutCompanyNestedInput
+    websiteAudit?: WebsiteAuditUncheckedUpdateOneWithoutCompanyNestedInput
+    score?: ScoreUncheckedUpdateOneWithoutCompanyNestedInput
+    tags?: CompanyTagUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    niche?: EnumCompanyNicheFieldUpdateOperationsInput | $Enums.CompanyNiche
+    region?: NullableEnumCompanyRegionFieldUpdateOperationsInput | $Enums.CompanyRegion | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    domain?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    googleMapsUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    googlePlaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    googleReviewCount?: NullableIntFieldUpdateOperationsInput | number | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    hasModernSite?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasChatbot?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasBookingSystem?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasGoogleAds?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    hasSocialMedia?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    socialMediaLinks?: NullableJsonNullValueInput | InputJsonValue
+    neqNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    yearFounded?: NullableIntFieldUpdateOperationsInput | number | null
+    employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TagUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    companies?: CompanyTagUpdateManyWithoutTagNestedInput
+    leads?: LeadTagUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagUncheckedUpdateWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    companies?: CompanyTagUncheckedUpdateManyWithoutTagNestedInput
+    leads?: LeadTagUncheckedUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ContactCreateManyCompanyInput = {
@@ -29244,6 +32544,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29268,6 +32569,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lead?: LeadUpdateOneRequiredWithoutOutreachDraftsNestedInput
@@ -29296,6 +32598,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29322,6 +32625,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29348,6 +32652,7 @@ export namespace Prisma {
     inputHash?: string | null
     outputSchemaVersion?: string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29357,6 +32662,7 @@ export namespace Prisma {
     userId?: string | null
     eventType: $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -29367,6 +32673,7 @@ export namespace Prisma {
     note?: string | null
     done?: boolean
     doneAt?: Date | string | null
+    workspaceId: string
     createdAt?: Date | string
   }
 
@@ -29380,6 +32687,7 @@ export namespace Prisma {
     lastSyncedAt?: Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: string | null
+    workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29408,6 +32716,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contact?: ContactUpdateOneWithoutOutreachDraftsNestedInput
@@ -29436,6 +32745,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29462,6 +32772,7 @@ export namespace Prisma {
     inputHash?: NullableStringFieldUpdateOperationsInput | string | null
     outputSchemaVersion?: NullableStringFieldUpdateOperationsInput | string | null
     evidenceRefs?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29470,6 +32781,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutActivitiesNestedInput
   }
@@ -29479,6 +32791,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29487,6 +32800,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     eventType?: EnumActivityEventTypeFieldUpdateOperationsInput | $Enums.ActivityEventType
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29496,6 +32810,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRemindersNestedInput
   }
@@ -29507,6 +32822,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29517,6 +32833,7 @@ export namespace Prisma {
     note?: NullableStringFieldUpdateOperationsInput | string | null
     done?: BoolFieldUpdateOperationsInput | boolean
     doneAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29530,6 +32847,7 @@ export namespace Prisma {
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29544,6 +32862,7 @@ export namespace Prisma {
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29558,6 +32877,7 @@ export namespace Prisma {
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     labels?: NullableJsonNullValueInput | InputJsonValue
     snippet?: NullableStringFieldUpdateOperationsInput | string | null
+    workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29616,6 +32936,10 @@ export namespace Prisma {
      */
     export type UserCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use WorkspaceCountOutputTypeDefaultArgs instead
+     */
+    export type WorkspaceCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use CompanyCountOutputTypeDefaultArgs instead
      */
     export type CompanyCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CompanyCountOutputTypeDefaultArgs<ExtArgs>
@@ -29639,6 +32963,10 @@ export namespace Prisma {
      * @deprecated Use WorkspaceDefaultArgs instead
      */
     export type WorkspaceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = WorkspaceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use WorkspaceMemberDefaultArgs instead
+     */
+    export type WorkspaceMemberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = WorkspaceMemberDefaultArgs<ExtArgs>
     /**
      * @deprecated Use CompanyDefaultArgs instead
      */

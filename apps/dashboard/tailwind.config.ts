@@ -10,91 +10,80 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        serif: ['Newsreader', 'Georgia', 'serif'],
-        mono: ['JetBrains Mono', 'SF Mono', 'monospace'],
+        geist: ['var(--font-geist-sans)', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'monospace'],
       },
       colors: {
-        // Minimalist warm monochrome palette
+        // Luxury Light Mode Palette
         canvas: {
           DEFAULT: '#FFFFFF',
-          warm: '#F7F6F3',
+          warm: '#FAF9F6', // Off-white luxury
+          depth: '#F5F4EF',
         },
         surface: {
-          DEFAULT: '#FFFFFF',
-          elevated: '#F9F9F8',
+          DEFAULT: 'rgba(255, 255, 255, 0.7)',
+          elevated: 'rgba(255, 255, 255, 0.9)',
+          glass: 'rgba(255, 255, 255, 0.4)',
+        },
+        accent: {
+          slate: {
+            DEFAULT: '#5F799D', // User selected
+            muted: 'rgba(95, 121, 157, 0.1)',
+            deep: '#4A5E7A',
+          },
         },
         text: {
-          primary: '#111111',
-          secondary: '#787774',
-          tertiary: '#A5A5A5',
+          primary: '#1A1A1A',
+          secondary: '#5A5A5A',
+          tertiary: '#9A9A9A',
           muted: '#C5C5C5',
         },
         border: {
-          DEFAULT: '#EAEAEA',
-          light: 'rgba(0, 0, 0, 0.06)',
-        },
-        // Semantic accents - muted pastels
-        accent: {
-          red: {
-            bg: '#FDEBEC',
-            text: '#9F2F2D',
-          },
-          blue: {
-            bg: '#E1F3FE',
-            text: '#1F6C9F',
-          },
-          green: {
-            bg: '#EDF3EC',
-            text: '#346538',
-          },
-          yellow: {
-            bg: '#FBF3DB',
-            text: '#956400',
-          },
-          purple: {
-            bg: '#F3E8FF',
-            text: '#7C3AED',
-          },
+          DEFAULT: 'rgba(0, 0, 0, 0.08)',
+          light: 'rgba(0, 0, 0, 0.04)',
+          glass: 'rgba(255, 255, 255, 0.2)',
         },
         // Shadcn compatibility
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: '#5F799D',
+          foreground: '#FFFFFF',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: 'rgba(95, 121, 157, 0.1)',
+          foreground: '#5F799D',
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: '#F5F5F3',
+          foreground: '#737373',
+        },
+        accent_ui: {
+          DEFAULT: '#F5F5F3',
+          foreground: '#171717',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          DEFAULT: '#EF4444',
+          foreground: '#FAFAFA',
         },
-        ring: 'hsl(var(--ring))',
-        input: 'hsl(var(--input))',
+        ring: '#5F799D',
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        '3xl': '2.5rem', // User requested
+        '2xl': '1.5rem',
+        xl: '1rem',
+        lg: '0.75rem',
+      },
+      boxShadow: {
+        'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.05)',
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.04)',
+        'inner-light': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.5)',
       },
       animation: {
-        'fade-in': 'fadeIn 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
-        'slide-up': 'slideUp 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'fade-in': 'fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'float': 'float 6s ease-in-out infinite',
+        'shimmer': 'shimmer 2s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -102,12 +91,16 @@ const config: Config = {
           '100%': { opacity: '1' },
         },
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(12px)' },
+          '0%': { opacity: '0', transform: 'translateY(24px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-      },
-      transitionTimingFunction: {
-        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
     },
   },
@@ -115,3 +108,4 @@ const config: Config = {
 };
 
 export default config;
+

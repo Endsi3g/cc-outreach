@@ -31,24 +31,25 @@ interface FilterOptions {
 export class CompaniesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateCompanyInput) {
-    const slug = slugify(data.name + '-' + (data.city ?? ''));
+  async create(workspaceId: string, data: CreateCompanyInput) {
+    const slug = slugify(data.name + '-' + (data.city ?? '') + '-' + workspaceId); // Ensure uniqueness per workspace
     const domain = data.website ? normalizeDomain(data.website) || undefined : undefined;
 
     return this.prisma.company.create({
       data: {
         ...data,
+        workspaceId,
         slug,
         domain,
       },
     });
   }
 
-  async findAll(filters: FilterOptions = {}) {
+  async findAll(workspaceId: string, filters: FilterOptions = {}) {
     const { niche, region, page = 1, limit = 20, search } = filters;
     const skip = (page - 1) * limit;
 
-    const where: Record<string, unknown> = {};
+    const where: Record<string, any> = { workspaceId };
     if (niche) where['niche'] = niche;
     if (region) where['region'] = region;
     if (search) {
@@ -72,36 +73,36 @@ export class CompaniesService {
     return { companies, total, page, limit, pages: Math.ceil(total / limit) };
   }
 
-  async findById(id: string) {
+  async findById(workspaceId: string, id: string) {
     const company = await this.prisma.company.findUnique({
-      where: { id },
+      where: { id, workspaceId },
       include: { contacts: true, lead: true, websiteAudit: true, score: true, sources: true, tags: { include: { tag: true } } },
     });
     if (!company) throw new NotFoundException(`Entreprise ${id} introuvable`);
     return company;
   }
 
-  async update(id: string, data: Partial<CreateCompanyInput> & { notes?: string }) {
-    await this.findById(id);
-    return this.prisma.company.update({ where: { id }, data });
+  async update(workspaceId: string, id: string, data: Partial<CreateCompanyInput> & { notes?: string }) {
+    await this.findById(workspaceId, id);
+    return this.prisma.company.update({ where: { id, workspaceId }, data });
   }
 
-  async delete(id: string) {
-    await this.findById(id);
-    return this.prisma.company.delete({ where: { id } });
+  async delete(workspaceId: string, id: string) {
+    await this.findById(workspaceId, id);
+    return this.prisma.company.delete({ where: { id, workspaceId } });
   }
 
-  /** Vérifie les doublons par domain, phone ou nom+ville */
-  async findDuplicate(input: { domain?: string; phone?: string; name: string; city?: string }) {
+  /** Vérifie les doublons par domain, phone ou nom+ville au sein d'un workspace */
+  async findDuplicate(workspaceId: string, input: { domain?: string; phone?: string; name: string; city?: string }) {
     if (input.domain) {
-      const byDomain = await this.prisma.company.findUnique({ where: { domain: input.domain } });
+      const byDomain = await this.prisma.company.findFirst({ where: { domain: input.domain, workspaceId } });
       if (byDomain) return byDomain;
     }
     if (input.phone) {
-      const byPhone = await this.prisma.company.findFirst({ where: { phone: input.phone } });
+      const byPhone = await this.prisma.company.findFirst({ where: { phone: input.phone, workspaceId } });
       if (byPhone) return byPhone;
     }
-    const slug = slugify(input.name + '-' + (input.city ?? ''));
+    const slug = slugify(input.name + '-' + (input.city ?? '') + '-' + workspaceId);
     return this.prisma.company.findUnique({ where: { slug } });
   }
 }

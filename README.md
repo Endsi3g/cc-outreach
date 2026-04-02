@@ -1,4 +1,4 @@
-# CC-Outreach (Uprise Sales OS) v1.0.0 🚀
+# CC-Outreach v1.0.1 🚀
 
 > Plateforme de prospection B2B locale propulsée par IA pour le Québec.
 
@@ -22,7 +22,7 @@ Le projet utilise une architecture modulaire avec **Turbo**, **NestJS**, **Prism
 ### Services
 
 | Service | Port | Description |
-|---------|------|-------------|
+| --- | --- | --- |
 | `apps/api` | 3000 | Backend principal NestJS (API REST, Auth, Business logic) |
 | `apps/worker` | 3001 | Workers asynchrones pour l'enrichissement, l'audit et l'IA (BullMQ) |
 | `apps/scheduler` | 3002 | Gestionnaire de tâches planifiées |
@@ -51,32 +51,37 @@ Le projet utilise une architecture modulaire avec **Turbo**, **NestJS**, **Prism
 ### Option 1 : Docker Compose (Recommandé)
 
 1. **Cloner le repo** :
+
    ```bash
    git clone https://github.com/Endsi3g/cc-outreach.git
    cd cc-outreach
    ```
 
 2. **Configurer l'environnement** :
+
    ```bash
    cp .env.example .env
    # Éditer .env avec vos identifiants
    ```
 
 3. **Lancer avec Docker Compose** :
+
    ```bash
    cd infra
    docker-compose -f docker-compose.prod.yml up -d
    ```
 
 4. **Accéder aux services** :
-   - API : http://localhost:3000
-   - Dashboard : http://localhost:3003
-   - Worker : http://localhost:3001
-   - Scheduler : http://localhost:3002
+
+   - API : <http://localhost:3000>
+   - Dashboard : <http://localhost:3003>
+   - Worker : <http://localhost:3001>
+   - Scheduler : <http://localhost:3002>
 
 ### Option 2 : Développement Local
 
 1. **Cloner et installer** :
+
    ```bash
    git clone https://github.com/Endsi3g/cc-outreach.git
    cd cc-outreach
@@ -84,6 +89,7 @@ Le projet utilise une architecture modulaire avec **Turbo**, **NestJS**, **Prism
    ```
 
 2. **Démarrer l'infrastructure** :
+
    ```bash
    cd infra
    docker-compose up -d
@@ -91,6 +97,7 @@ Le projet utilise une architecture modulaire avec **Turbo**, **NestJS**, **Prism
    ```
 
 3. **Configurer la base de données** :
+
    ```bash
    pnpm db:generate
    pnpm db:push
@@ -98,6 +105,7 @@ Le projet utilise une architecture modulaire avec **Turbo**, **NestJS**, **Prism
    ```
 
 4. **Lancer en mode développement** :
+
    ```bash
    # Option A - Tout en une commande
    pnpm dev
@@ -109,6 +117,7 @@ Le projet utilise une architecture modulaire avec **Turbo**, **NestJS**, **Prism
    ```
 
    Le Dashboard se lance séparément :
+
    ```bash
    cd apps/dashboard
    pnpm dev
@@ -232,7 +241,7 @@ pnpm clean
 
 ## 📁 Structure du Projet
 
-```
+```text
 cc-outreach/
 ├── apps/
 │   ├── api/              # Backend API NestJS
@@ -287,6 +296,7 @@ La release sera automatiquement créée avec les notes de version.
 ## 📞 Support
 
 Pour toute question ou problème :
+
 - Ouvrez une issue sur GitHub
 - Contactez l'équipe via Telegram/Discord (si configuré)
 
@@ -297,6 +307,6 @@ Copyright © 2026 CC-Outreach / Uprise Sales OS.
 
 ---
 
-**Version** : 1.0.0  
-**Build** : Production Ready  
+**Version** : 1.0.1
+**Build** : Production Ready
 **Dernière mise à jour** : Avril 2026

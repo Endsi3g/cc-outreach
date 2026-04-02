@@ -4,6 +4,9 @@ import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import compression from 'compression';
+import { IoAdapter } from '@nestjs/platform-socket.io';
+import { createAdapter } from '@socket.io/redis-adapter';
+import { Redis } from 'ioredis';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -29,6 +32,15 @@ async function bootstrap() {
     }),
   );
 
+  // ── WebSocket Adapter ────────────────────────────────────────────────────
+  const pubClient = new Redis({
+    host: process.env.REDIS_HOST ?? 'localhost',
+    port: Number(process.env.REDIS_PORT ?? 6379),
+    password: process.env.REDIS_PASSWORD ?? undefined,
+  });
+  const subClient = pubClient.duplicate();
+  app.useWebSocketAdapter(new RedisIoAdapter(app, pubClient, subClient));
+
   // ── Global prefix ─────────────────────────────────────────────────────────
   app.setGlobalPrefix('api/v1');
 
@@ -48,6 +60,19 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   logger.log(`API démarrée sur http://localhost:${port}`);
+}
+
+class RedisIoAdapter extends IoAdapter {
+  constructor(app: any, private readonly pubClient: Redis, private readonly subClient: Redis) {
+    super(app);
+  }
+
+  createIOServer(port: number, options?: any): any {
+    const server = super.createIOServer(port, options);
+    const redisAdapter = createAdapter(this.pubClient, this.subClient);
+    server.adapter(redisAdapter);
+    return server;
+  }
 }
 
 bootstrap();

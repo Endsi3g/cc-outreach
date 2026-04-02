@@ -1,223 +1,194 @@
-import type { Metadata } from "next";
-import { Inter, Newsreader } from "next/font/google";
-import "./globals.css";
+"use client";
+
 import React from "react";
+import "./globals.css";
+import { 
+  ChartLine, 
+  Users, 
+  Kanban, 
+  Envelope, 
+  ChartBar, 
+  Gear, 
+  SignOut,
+  MagnifyingGlass,
+  Bell,
+  NavigationArrow
+} from "@phosphor-icons/react";
+import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
+const navItems = [
+  { href: "/", label: "Dashboard", icon: ChartLine },
+  { href: "/leads", label: "Prospects", icon: Users },
+  { href: "/pipeline", label: "Pipeline", icon: Kanban },
+  { href: "/campaigns", label: "Campagnes", icon: Envelope },
+  { href: "/analytics", label: "Analytique", icon: ChartBar },
+];
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-newsreader",
-});
-
-export const metadata: Metadata = {
-  title: "Uprise Sales OS",
-  description: "Plateforme de prospection B2B propulsée par IA",
-};
+const secondaryNav = [
+  { href: "/settings", label: "Paramètres", icon: Gear },
+  { href: "/logout", label: "Quitter", icon: SignOut },
+];
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const pathname = usePathname();
+
   return (
     <html lang="fr">
-      <body className={`${inter.variable} ${newsreader.variable} font-sans antialiased`}>
-        {/* Ambient background for depth */}
-        <div className="ambient-bg" />
+      <body className="noise-bg font-geist text-text-primary antialiased bg-canvas-warm">
+        <div className="flex min-h-screen relative overflow-hidden">
+          {/* Asymmetric Design Layer: Decorative Background Elements */}
+          <div className="fixed top-[-10%] left-[-5%] w-[40%] h-[120%] bg-accent-slate/5 blur-[120px] rounded-full pointer-events-none" />
+          
+          {/* Main Layout Wrapper */}
+          <div className="flex-1 flex flex-col md:flex-row relative z-10 w-full">
+            {/* Sidebar / Left Info Area (Minimalist & Asymmetric) */}
+            <aside className="hidden lg:flex w-80 h-screen sticky top-0 flex-col p-12 border-r border-black/5 bg-white/30 backdrop-blur-sm">
+              <div className="flex items-center gap-4 mb-20">
+                <div className="w-12 h-12 bg-accent-slate rounded-2xl flex items-center justify-center shadow-lg shadow-accent-slate/20">
+                  <NavigationArrow size={24} weight="fill" className="text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold tracking-tight text-text-primary">Uprise</h1>
+                  <p className="text-xs text-text-secondary font-medium tracking-widest uppercase">Sales Engine</p>
+                </div>
+              </div>
 
-        <div className="flex min-h-screen">
-          {/* Sidebar Navigation */}
-          <Sidebar />
+              <div className="flex-1">
+                <div className="space-y-12">
+                  <div>
+                    <h3 className="text-[10px] font-bold text-text-tertiary uppercase tracking-[0.2em] mb-6">Système</h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-text-secondary">Statut de l'IA</span>
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className="font-mono text-[10px] text-emerald-600">OPÉRATIONNEL</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-text-secondary">Threads Actifs</span>
+                        <span className="font-mono text-[10px] text-text-primary">124</span>
+                      </div>
+                    </div>
+                  </div>
 
-          {/* Main Content Area */}
-          <main className="flex-1 ml-64 min-h-screen">
-            {/* Top Navigation Bar */}
-            <TopNav />
+                  <div>
+                    <h3 className="text-[10px] font-bold text-text-tertiary uppercase tracking-[0.2em] mb-6">Opportunité</h3>
+                    <div className="p-4 rounded-3xl bg-accent-slate/5 border border-accent-slate/10">
+                      <p className="text-xs text-text-secondary leading-relaxed mb-4">
+                        "L'analyse détecte un pic de besoin dans la niche <span className="text-accent-slate font-bold">Toiture (Montréal)</span>."
+                      </p>
+                      <button className="text-[10px] font-bold text-accent-slate uppercase tracking-wider hover:underline">
+                        Détails →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-            {/* Page Content */}
-            <div className="p-8 max-w-7xl mx-auto">
-              {children}
-            </div>
-          </main>
+              <div className="mt-auto">
+                <div className="flex items-center gap-4 p-4 rounded-3xl bg-white/50 border border-black/5">
+                  <div className="w-10 h-10 rounded-full bg-accent-slate/10 flex items-center justify-center text-accent-slate font-bold text-sm">
+                    JD
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-text-primary">John Doe</p>
+                    <p className="text-[10px] text-text-tertiary uppercase tracking-wider">Administrateur</p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            {/* Content Area */}
+            <main className="flex-1 relative">
+              {/* Floating Top Mini Nav */}
+              <div className="h-20 px-8 lg:px-12 flex items-center justify-between sticky top-0 z-30 bg-canvas-warm/80 backdrop-blur-md">
+                <div className="relative group max-w-sm w-full hidden md:block">
+                  <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary group-focus-within:text-accent-slate transition-colors" />
+                  <input 
+                    type="text" 
+                    placeholder="Command / Recherche..." 
+                    className="w-full pl-12 pr-4 py-2.5 bg-white/50 border border-black/5 rounded-full text-sm focus:outline-none focus:bg-white focus:border-accent-slate/30 focus:shadow-premium transition-all"
+                  />
+                </div>
+
+                <div className="flex items-center gap-4 ml-auto">
+                  <button title="Notifications" className="w-10 h-10 rounded-full bg-white border border-black/5 flex items-center justify-center text-text-secondary hover:text-accent-slate transition-all shadow-sm">
+                    <Bell size={20} />
+                  </button>
+                  <button title="Utilisateurs" className="w-10 h-10 rounded-full bg-white border border-black/5 flex items-center justify-center text-text-secondary hover:text-accent-slate transition-all shadow-sm lg:hidden">
+                    <Users size={20} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-8 lg:p-12 pb-32 max-w-[1400px] mx-auto">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={pathname}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {children}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </main>
+          </div>
+
+          {/* Floating Dock Navigation (iOS Style) */}
+          <nav className="nav-dock">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
+              return (
+                <Link key={item.href} href={item.href}>
+                  <motion.div 
+                    className={`nav-item ${isActive ? "nav-item-active" : ""}`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Icon size={24} weight={isActive ? "fill" : "regular"} />
+                    <span className="text-[9px] uppercase font-bold tracking-[0.15em] hidden md:block">
+                      {item.label}
+                    </span>
+                    {isActive && (
+                      <motion.div 
+                        layoutId="active-pill"
+                        className="absolute -bottom-1 w-1 h-1 bg-accent-slate rounded-full"
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      />
+                    )}
+                  </motion.div>
+                </Link>
+              );
+            })}
+            <div className="w-[1px] h-8 bg-black/5 mx-2" />
+            {secondaryNav.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link key={item.href} href={item.href}>
+                  <motion.div 
+                    className="nav-item opacity-60 hover:opacity-100"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Icon size={24} />
+                  </motion.div>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </body>
     </html>
-  );
-}
-
-// Sidebar Component
-function Sidebar() {
-  const navItems = [
-    { href: "/", label: "Tableau de bord", icon: "chart" },
-    { href: "/leads", label: "Prospects", icon: "users" },
-    { href: "/pipeline", label: "Pipeline", icon: "pipeline" },
-    { href: "/campaigns", label: "Campagnes", icon: "mail" },
-    { href: "/analytics", label: "Analytique", icon: "barChart" },
-  ];
-
-  const secondaryNav = [
-    { href: "/settings", label: "Paramètres", icon: "settings" },
-    { href: "/logout", label: "Déconnexion", icon: "logout" },
-  ];
-
-  return (
-    <aside className="w-64 fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-[var(--border)]">
-      {/* Logo Section */}
-      <div className="p-6 border-b border-[var(--border)]">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-[var(--text-primary)] rounded flex items-center justify-center">
-            <span className="text-white font-semibold text-sm">U</span>
-          </div>
-          <div>
-            <span className="text-[var(--text-primary)] font-semibold tracking-tight">Uprise</span>
-            <span className="block text-[var(--text-secondary)] text-xs">Sales OS</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
-        {navItems.map((item) => (
-          <NavItem key={item.href} {...item} />
-        ))}
-      </nav>
-
-      {/* Secondary Navigation */}
-      <div className="p-4 border-t border-[var(--border)] space-y-1">
-        {secondaryNav.map((item) => (
-          <NavItem key={item.href} {...item} />
-        ))}
-      </div>
-    </aside>
-  );
-}
-
-// Navigation Item Component
-function NavItem({ href, label, icon }: { href: string; label: string; icon: string }) {
-  // Simple SVG icons - minimalist style
-  const icons: Record<string, React.ReactNode> = {
-    chart: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <path d="M8 17V12" />
-        <path d="M12 17V8" />
-        <path d="M16 17V14" />
-      </svg>
-    ),
-    users: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
-    pipeline: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1" />
-        <rect x="14" y="3" width="7" height="7" rx="1" />
-        <rect x="14" y="14" width="7" height="7" rx="1" />
-        <rect x="3" y="14" width="7" height="7" rx="1" />
-      </svg>
-    ),
-    mail: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2" />
-        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-      </svg>
-    ),
-    barChart: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 20V10" />
-        <path d="M12 20V4" />
-        <path d="M6 20v-6" />
-      </svg>
-    ),
-    settings: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-        <circle cx="12" cy="12" r="3" />
-      </svg>
-    ),
-    logout: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-        <polyline points="16 17 21 12 16 7" />
-        <line x1="21" x2="9" y1="12" y2="12" />
-      </svg>
-    ),
-  };
-
-  return (
-    <a
-      href={href}
-      className="nav-item group"
-    >
-      <span className="text-[var(--text-tertiary)] group-hover:text-[var(--text-secondary)] transition-colors">
-        {icons[icon]}
-      </span>
-      <span>{label}</span>
-    </a>
-  );
-}
-
-// Top Navigation Component
-function TopNav() {
-  return (
-    <header className="h-16 border-b border-[var(--border)] bg-white/80 backdrop-blur-sm sticky top-0 z-40 px-8 flex items-center justify-between">
-      {/* Search */}
-      <div className="flex-1 max-w-md">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Rechercher..."
-            className="w-full pl-10 pr-4 py-2 bg-[var(--canvas-warm)] border border-transparent rounded-lg text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:border-[var(--border)] focus:bg-white transition-all"
-          />
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.3-4.3" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Right Actions */}
-      <div className="flex items-center gap-4">
-        {/* Notifications */}
-        <button className="relative p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--canvas-warm)] rounded-lg transition-colors">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-          </svg>
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[var(--accent-red-text)] rounded-full" />
-        </button>
-
-        {/* User Avatar */}
-        <button className="flex items-center gap-3 p-1.5 hover:bg-[var(--canvas-warm)] rounded-lg transition-colors">
-          <div className="w-8 h-8 bg-[var(--text-primary)] rounded flex items-center justify-center">
-            <span className="text-white text-xs font-medium">JD</span>
-          </div>
-          <span className="text-sm font-medium text-[var(--text-primary)]">John Doe</span>
-          <svg className="text-[var(--text-tertiary)]" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </button>
-      </div>
-    </header>
   );
 }

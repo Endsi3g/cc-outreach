@@ -3,6 +3,8 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiQuery } from '@nestjs/swagger'
 import { AuthGuard } from '@nestjs/passport';
 import { IsString, IsOptional } from 'class-validator';
 import { CompaniesService } from './companies.service';
+import { WorkspaceMemberGuard } from '../auth/guards/workspace-member.guard';
+import { WorkspaceId } from '../auth/decorators/workspace-id.decorator';
 
 // Enums as string unions instead of imported enum values (avoids TS enum-as-value error pre-generate)
 const NICHES = ['CONSTRUCTION','TOITURE','EXCAVATION','HVAC','ELECTRICITE','PLOMBERIE','PORTES_FENETRES','RENOVATION','PAYSAGEMENT','OTHER'] as const;
@@ -26,14 +28,16 @@ class CreateCompanyDto {
 
 @ApiTags('companies')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), WorkspaceMemberGuard)
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companies: CompaniesService) {}
 
   @Post()
   @ApiOperation({ summary: 'Créer une entreprise' })
-  create(@Body() dto: CreateCompanyDto) { return this.companies.create(dto as Parameters<CompaniesService['create']>[0]); }
+  create(@WorkspaceId() workspaceId: string, @Body() dto: CreateCompanyDto) {
+    return this.companies.create(workspaceId, dto as Parameters<CompaniesService['create']>[1]);
+  }
 
   @Get()
   @ApiOperation({ summary: 'Lister les entreprises' })
@@ -43,20 +47,25 @@ export class CompaniesController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   findAll(
+    @WorkspaceId() workspaceId: string,
     @Query('niche') niche?: Niche,
     @Query('region') region?: Region,
     @Query('search') search?: string,
     @Query('page') page = 1,
     @Query('limit') limit = 20,
   ) {
-    return this.companies.findAll({ niche, region, search, page: Number(page), limit: Number(limit) });
+    return this.companies.findAll(workspaceId, { niche, region, search, page: Number(page), limit: Number(limit) });
   }
 
-  @Get(':id') findOne(@Param('id') id: string) { return this.companies.findById(id); }
-
-  @Patch(':id') update(@Param('id') id: string, @Body() dto: Partial<CreateCompanyDto>) {
-    return this.companies.update(id, dto as Parameters<CompaniesService['update']>[1]);
+  @Get(':id') findOne(@WorkspaceId() workspaceId: string, @Param('id') id: string) {
+    return this.companies.findById(workspaceId, id);
   }
 
-  @Delete(':id') remove(@Param('id') id: string) { return this.companies.delete(id); }
+  @Patch(':id') update(@WorkspaceId() workspaceId: string, @Param('id') id: string, @Body() dto: Partial<CreateCompanyDto>) {
+    return this.companies.update(workspaceId, id, dto as Parameters<CompaniesService['update']>[2]);
+  }
+
+  @Delete(':id') remove(@WorkspaceId() workspaceId: string, @Param('id') id: string) {
+    return this.companies.delete(workspaceId, id);
+  }
 }

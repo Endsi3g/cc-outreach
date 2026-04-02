@@ -4,6 +4,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { LeadsService } from './leads.service';
 import { LeadStatus, PipelineStage } from '@cc-outreach/database/src/generated';
+import { WorkspaceMemberGuard } from '../auth/guards/workspace-member.guard';
+import { WorkspaceId } from '../auth/decorators/workspace-id.decorator';
 
 class CreateLeadDto {
   @IsString() companyId!: string;
@@ -16,15 +18,15 @@ class MarkLostDto { @IsString() @IsOptional() reason?: string; }
 
 @ApiTags('leads')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), WorkspaceMemberGuard)
 @Controller('leads')
 export class LeadsController {
   constructor(private readonly leads: LeadsService) {}
 
   @Post()
   @ApiOperation({ summary: 'Créer un lead' })
-  create(@Body() dto: CreateLeadDto) {
-    return this.leads.create(dto.companyId, dto.ownerId);
+  create(@WorkspaceId() workspaceId: string, @Body() dto: CreateLeadDto) {
+    return this.leads.create(workspaceId, dto.companyId, dto.ownerId);
   }
 
   @Get()
@@ -35,46 +37,47 @@ export class LeadsController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   findAll(
+    @WorkspaceId() workspaceId: string,
     @Query('status') status?: LeadStatus,
     @Query('stage') stage?: PipelineStage,
     @Query('ownerId') ownerId?: string,
     @Query('page') page = 1,
     @Query('limit') limit = 20,
   ) {
-    return this.leads.findAll({ status, stage, ownerId, page: Number(page), limit: Number(limit) });
+    return this.leads.findAll(workspaceId, { status, stage, ownerId, page: Number(page), limit: Number(limit) });
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Détail lead complet' })
-  findOne(@Param('id') id: string) { return this.leads.findById(id); }
+  findOne(@WorkspaceId() workspaceId: string, @Param('id') id: string) { return this.leads.findById(workspaceId, id); }
 
   @Patch(':id/status')
   @ApiOperation({ summary: 'Changer le statut' })
-  changeStatus(@Param('id') id: string, @Body() dto: ChangeStatusDto) {
-    return this.leads.changeStatus(id, dto.status);
+  changeStatus(@WorkspaceId() workspaceId: string, @Param('id') id: string, @Body() dto: ChangeStatusDto) {
+    return this.leads.changeStatus(workspaceId, id, dto.status);
   }
 
   @Patch(':id/stage')
   @ApiOperation({ summary: 'Changer le stage pipeline' })
-  changeStage(@Param('id') id: string, @Body() dto: ChangeStageDto) {
-    return this.leads.changeStage(id, dto.stage);
+  changeStage(@WorkspaceId() workspaceId: string, @Param('id') id: string, @Body() dto: ChangeStageDto) {
+    return this.leads.changeStage(workspaceId, id, dto.stage);
   }
 
   @Patch(':id/owner')
   @ApiOperation({ summary: 'Assigner un owner' })
-  assignOwner(@Param('id') id: string, @Body('ownerId') ownerId: string) {
-    return this.leads.assignOwner(id, ownerId);
+  assignOwner(@WorkspaceId() workspaceId: string, @Param('id') id: string, @Body('ownerId') ownerId: string) {
+    return this.leads.assignOwner(workspaceId, id, ownerId);
   }
 
   @Patch(':id/qualify')
   @ApiOperation({ summary: 'Qualifier le lead' })
-  qualify(@Param('id') id: string) { return this.leads.markQualified(id); }
+  qualify(@WorkspaceId() workspaceId: string, @Param('id') id: string) { return this.leads.markQualified(workspaceId, id); }
 
   @Patch(':id/lost')
   @ApiOperation({ summary: 'Marquer comme perdu' })
-  lost(@Param('id') id: string, @Body() dto: MarkLostDto) { return this.leads.markLost(id, dto.reason); }
+  lost(@WorkspaceId() workspaceId: string, @Param('id') id: string, @Body() dto: MarkLostDto) { return this.leads.markLost(workspaceId, id, dto.reason); }
 
   @Patch(':id/won')
   @ApiOperation({ summary: 'Marquer comme gagné' })
-  won(@Param('id') id: string) { return this.leads.markWon(id); }
+  won(@WorkspaceId() workspaceId: string, @Param('id') id: string) { return this.leads.markWon(workspaceId, id); }
 }

@@ -170,6 +170,7 @@ model User {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
+  members         WorkspaceMember[]
   leads           Lead[]
   activities      Activity[]
   reminders       Reminder[]
@@ -186,7 +187,34 @@ model Workspace {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  members   WorkspaceMember[]
+  leads     Lead[]
+  companies Company[]
+  tags      Tag[]
+
   @@map("workspaces")
+}
+
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model WorkspaceMember {
+  id          String        @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        WorkspaceRole @default(MEMBER)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@map("workspace_members")
 }
 
 // ─── COMPANIES ────────────────────────────────────────────────────────────────
@@ -223,9 +251,11 @@ model Company {
   yearFounded           Int?
   employeeCount         String?        // "1-5", "5-20", etc.
   isActive              Boolean        @default(true)
+  workspaceId           String?
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
 
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   contacts       Contact[]
   sources        Source[]
   lead           Lead?
@@ -235,6 +265,7 @@ model Company {
 
   @@index([niche, region])
   @@index([domain])
+  @@index([workspaceId])
   @@map("companies")
 }
 
@@ -300,9 +331,11 @@ model Lead {
   wonAt         DateTime?
   lostReason    String?
   notes         String?
+  workspaceId   String?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   company        Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   owner          User?           @relation(fields: [ownerId], references: [id])
   outreachDrafts OutreachDraft[]
@@ -313,6 +346,7 @@ model Lead {
 
   @@index([status, pipelineStage])
   @@index([ownerId])
+  @@index([workspaceId])
   @@map("leads")
 }
 
@@ -345,11 +379,13 @@ model WebsiteAudit {
   summary            String?         // AI-generated summary
   summaryGeneratedAt DateTime?
   crawlError         String?
+  workspaceId        String?
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
+  @@index([workspaceId])
   @@map("website_audits")
 }
 
@@ -370,11 +406,13 @@ model Score {
   globalScore                  Int      @default(0)
   complianceFlags              ComplianceFlag[]
   requiresHumanReview          Boolean  @default(false)
+  workspaceId                  String?
   scoredAt                     DateTime @default(now())
   updatedAt                    DateTime @updatedAt
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
+  @@index([workspaceId])
   @@map("scores")
 }
 
@@ -404,6 +442,7 @@ model OutreachDraft {
   inputHash        String?
   outputSchemaVersion String?
   evidenceRefs     Json?           // links to source IDs used
+  workspaceId      String?
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 
@@ -412,6 +451,7 @@ model OutreachDraft {
   author  User?    @relation(fields: [authorId], references: [id])
 
   @@index([leadId, status])
+  @@index([workspaceId])
   @@map("outreach_drafts")
 }
 
@@ -428,12 +468,14 @@ model GmailThread {
   lastSyncedAt DateTime?
   labels       Json?
   snippet      String?
+  workspaceId  String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   @@index([leadId])
+  @@index([workspaceId])
   @@map("gmail_threads")
 }
 
@@ -445,12 +487,14 @@ model Activity {
   userId    String?
   eventType ActivityEventType
   metadata  Json?
+  workspaceId String?
   createdAt DateTime          @default(now())
 
   lead Lead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
   user User? @relation(fields: [userId], references: [id])
 
   @@index([leadId, eventType])
+  @@index([workspaceId])
   @@map("activities")
 }
 
@@ -464,12 +508,14 @@ model Reminder {
   note      String?
   done      Boolean  @default(false)
   doneAt    DateTime?
+  workspaceId String
   createdAt DateTime @default(now())
 
   lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id])
 
   @@index([userId, dueAt])
+  @@index([workspaceId])
   @@map("reminders")
 }
 
@@ -479,11 +525,14 @@ model Tag {
   id        String       @id @default(cuid())
   name      String       @unique
   color     String?
+  workspaceId String
   createdAt DateTime     @default(now())
 
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   companies CompanyTag[]
   leads     LeadTag[]
 
+  @@index([workspaceId])
   @@map("tags")
 }
 

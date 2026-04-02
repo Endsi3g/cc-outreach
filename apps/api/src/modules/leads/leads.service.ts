@@ -14,17 +14,17 @@ interface FilterOptions {
 export class LeadsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(companyId: string, ownerId?: string) {
+  async create(workspaceId: string, companyId: string, ownerId?: string) {
     return this.prisma.lead.create({
-      data: { companyId, ownerId, status: 'NEW', pipelineStage: 'COLD' },
+      data: { workspaceId, companyId, ownerId, status: 'NEW', pipelineStage: 'COLD' },
       include: { company: true },
     });
   }
 
-  async findAll(filters: FilterOptions = {}) {
+  async findAll(workspaceId: string, filters: FilterOptions = {}) {
     const { status, stage, ownerId, page = 1, limit = 20 } = filters;
     const skip = (page - 1) * limit;
-    const where: Record<string, unknown> = {};
+    const where: Record<string, any> = { workspaceId };
     if (status) where['status'] = status;
     if (stage) where['pipelineStage'] = stage;
     if (ownerId) where['ownerId'] = ownerId;
@@ -47,9 +47,9 @@ export class LeadsService {
     return { leads, total, page, limit, pages: Math.ceil(total / limit) };
   }
 
-  async findById(id: string) {
+  async findById(workspaceId: string, id: string) {
     const lead = await this.prisma.lead.findUnique({
-      where: { id },
+      where: { id, workspaceId },
       include: {
         company: { include: { contacts: true, websiteAudit: true, score: true, sources: true } },
         owner: { select: { id: true, name: true, email: true } },
@@ -63,27 +63,27 @@ export class LeadsService {
     return lead;
   }
 
-  async changeStatus(id: string, status: LeadStatus) {
-    return this.prisma.lead.update({ where: { id }, data: { status } });
+  async changeStatus(workspaceId: string, id: string, status: LeadStatus) {
+    return this.prisma.lead.update({ where: { id, workspaceId }, data: { status } });
   }
 
-  async changeStage(id: string, stage: PipelineStage) {
-    return this.prisma.lead.update({ where: { id }, data: { pipelineStage: stage } });
+  async changeStage(workspaceId: string, id: string, stage: PipelineStage) {
+    return this.prisma.lead.update({ where: { id, workspaceId }, data: { pipelineStage: stage } });
   }
 
-  async assignOwner(id: string, ownerId: string) {
-    return this.prisma.lead.update({ where: { id }, data: { ownerId } });
+  async assignOwner(workspaceId: string, id: string, ownerId: string) {
+    return this.prisma.lead.update({ where: { id, workspaceId }, data: { ownerId } });
   }
 
-  async markQualified(id: string) {
-    return this.prisma.lead.update({ where: { id }, data: { status: 'QUALIFIED', qualifiedAt: new Date() } });
+  async markQualified(workspaceId: string, id: string) {
+    return this.prisma.lead.update({ where: { id, workspaceId }, data: { status: 'QUALIFIED', qualifiedAt: new Date() } });
   }
 
-  async markLost(id: string, reason?: string) {
-    return this.prisma.lead.update({ where: { id }, data: { status: 'LOST', lostAt: new Date(), lostReason: reason } });
+  async markLost(workspaceId: string, id: string, reason?: string) {
+    return this.prisma.lead.update({ where: { id, workspaceId }, data: { status: 'LOST', lostAt: new Date(), lostReason: reason } });
   }
 
-  async markWon(id: string) {
-    return this.prisma.lead.update({ where: { id }, data: { status: 'WON', wonAt: new Date() } });
+  async markWon(workspaceId: string, id: string) {
+    return this.prisma.lead.update({ where: { id, workspaceId }, data: { status: 'WON', wonAt: new Date() } });
   }
 }
