@@ -1,0 +1,25 @@
+
+> @cc-outreach/api@0.1.0 dev C:\Users\upris\cc-outreach\apps\api
+> ts-node -r tsconfig-paths/register src/main.ts
+
+C:\Users\upris\cc-outreach\node_modules\.pnpm\ts-node@10.9.2_@types+node@25.5.0_typescript@5.9.3\node_modules\ts-node\src\index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: Ô¿» Unable to compile TypeScript:
+src/modules/auth/auth.module.ts(17,22): error TS2322: Type 'string' is not assignable to type 'number | StringValue | undefined'.
+
+    at createTSError (C:\Users\upris\cc-outreach\node_modules\.pnpm\ts-node@10.9.2_@types+node@25.5.0_typescript@5.9.3\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\upris\cc-outreach\node_modules\.pnpm\ts-node@10.9.2_@types+node@25.5.0_typescript@5.9.3\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\upris\cc-outreach\node_modules\.pnpm\ts-node@10.9.2_@types+node@25.5.0_typescript@5.9.3\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\upris\cc-outreach\node_modules\.pnpm\ts-node@10.9.2_@types+node@25.5.0_typescript@5.9.3\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\upris\cc-outreach\node_modules\.pnpm\ts-node@10.9.2_@types+node@25.5.0_typescript@5.9.3\node_modules\ts-node\src\index.ts:1617:30)
+    at node:internal/modules/cjs/loader:1892:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\upris\cc-outreach\node_modules\.pnpm\ts-node@10.9.2_@types+node@25.5.0_typescript@5.9.3\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1480:32)
+    at Module._load (node:internal/modules/cjs/loader:1299:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14) {
+  diagnosticCodes: [ 2322 ]
+}
+C:\Users\upris\cc-outreach\apps\api:
+ÔÇëERR_PNPM_RECURSIVE_RUN_FIRST_FAILÔÇë @cc-outreach/api@0.1.0 dev: `ts-node -r tsconfig-paths/register src/main.ts`
+Exit status 1

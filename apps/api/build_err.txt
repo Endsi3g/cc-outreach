@@ -1,0 +1,85 @@
+
+> @cc-outreach/api@0.1.0 build C:\Users\upris\cc-outreach\apps\api
+> nest build
+
+src/modules/activities/activities.service.ts:11:7 - error TS2322: Type '{ leadId: string; eventType: $Enums.ActivityEventType; userId: string | undefined; metadata: Prisma.InputJsonValue; }' is not assignable to type '(Without<ActivityCreateInput, ActivityUncheckedCreateInput> & ActivityUncheckedCreateInput) | (Without<...> & ActivityCreateInput)'.
+  Type '{ leadId: string; eventType: $Enums.ActivityEventType; userId: string | undefined; metadata: Prisma.InputJsonValue; }' is not assignable to type 'Without<ActivityCreateInput, ActivityUncheckedCreateInput> & ActivityUncheckedCreateInput'.
+    Property 'workspaceId' is missing in type '{ leadId: string; eventType: $Enums.ActivityEventType; userId: string | undefined; metadata: Prisma.InputJsonValue; }' but required in type 'ActivityUncheckedCreateInput'.
+
+11       data: {
+         ~~~~
+
+  ../../packages/database/src/generated/index.d.ts:23889:5
+    23889     workspaceId: string
+              ~~~~~~~~~~~
+    'workspaceId' is declared here.
+  ../../packages/database/src/generated/index.d.ts:16095:5
+    16095     data: XOR<ActivityCreateInput, ActivityUncheckedCreateInput>
+              ~~~~
+    The expected type comes from property 'data' which is declared here on type '{ select?: ActivitySelect<DefaultArgs> | null | undefined; include?: ActivityInclude<DefaultArgs> | null | undefined; data: (Without<...> & ActivityUncheckedCreateInput) | (Without<...> & ActivityCreateInput); }'
+src/modules/crm/crm.service.ts:28:7 - error TS2322: Type '{ leadId: string; userId: string; eventType: "NOTE_ADDED"; metadata: { note: string; }; }' is not assignable to type '(Without<ActivityCreateInput, ActivityUncheckedCreateInput> & ActivityUncheckedCreateInput) | (Without<...> & ActivityCreateInput)'.
+  Type '{ leadId: string; userId: string; eventType: "NOTE_ADDED"; metadata: { note: string; }; }' is not assignable to type 'Without<ActivityCreateInput, ActivityUncheckedCreateInput> & ActivityUncheckedCreateInput'.
+    Property 'workspaceId' is missing in type '{ leadId: string; userId: string; eventType: "NOTE_ADDED"; metadata: { note: string; }; }' but required in type 'ActivityUncheckedCreateInput'.
+
+28       data: {
+         ~~~~
+
+  ../../packages/database/src/generated/index.d.ts:23889:5
+    23889     workspaceId: string
+              ~~~~~~~~~~~
+    'workspaceId' is declared here.
+  ../../packages/database/src/generated/index.d.ts:16095:5
+    16095     data: XOR<ActivityCreateInput, ActivityUncheckedCreateInput>
+              ~~~~
+    The expected type comes from property 'data' which is declared here on type '{ select?: ActivitySelect<DefaultArgs> | null | undefined; include?: ActivityInclude<DefaultArgs> | null | undefined; data: (Without<...> & ActivityUncheckedCreateInput) | (Without<...> & ActivityCreateInput); }'
+src/modules/crm/crm.service.ts:39:7 - error TS2322: Type '{ leadId: string; userId: string; dueAt: Date; note: string; }' is not assignable to type '(Without<ReminderCreateInput, ReminderUncheckedCreateInput> & ReminderUncheckedCreateInput) | (Without<...> & ReminderCreateInput)'.
+  Type '{ leadId: string; userId: string; dueAt: Date; note: string; }' is not assignable to type 'Without<ReminderCreateInput, ReminderUncheckedCreateInput> & ReminderUncheckedCreateInput'.
+    Property 'workspaceId' is missing in type '{ leadId: string; userId: string; dueAt: Date; note: string; }' but required in type 'ReminderUncheckedCreateInput'.
+
+39       data: {
+         ~~~~
+
+  ../../packages/database/src/generated/index.d.ts:23961:5
+    23961     workspaceId: string
+              ~~~~~~~~~~~
+    'workspaceId' is declared here.
+  ../../packages/database/src/generated/index.d.ts:17097:5
+    17097     data: XOR<ReminderCreateInput, ReminderUncheckedCreateInput>
+              ~~~~
+    The expected type comes from property 'data' which is declared here on type '{ select?: ReminderSelect<DefaultArgs> | null | undefined; include?: ReminderInclude<DefaultArgs> | null | undefined; data: (Without<...> & ReminderUncheckedCreateInput) | (Without<...> & ReminderCreateInput); }'
+src/modules/enrichment/enrichment.controller.ts:16:35 - error TS2554: Expected 2 arguments, but got 1.
+
+16     return this.enrichmentService.triggerEnrichment(id);
+                                     ~~~~~~~~~~~~~~~~~
+
+  src/modules/enrichment/enrichment.service.ts:13:48
+    13   async triggerEnrichment(workspaceId: string, companyId: string) {
+                                                      ~~~~~~~~~~~~~~~~~
+    An argument for 'companyId' was not provided.
+src/modules/gmail/gmail.service.ts:103:9 - error TS2322: Type '{ leadId: string; gmailThreadId: string; subject: string; }' is not assignable to type '(Without<GmailThreadCreateInput, GmailThreadUncheckedCreateInput> & GmailThreadUncheckedCreateInput) | (Without<...> & GmailThreadCreateInput)'.
+  Type '{ leadId: string; gmailThreadId: string; subject: string; }' is not assignable to type 'Without<GmailThreadCreateInput, GmailThreadUncheckedCreateInput> & GmailThreadUncheckedCreateInput'.
+    Property 'workspaceId' is missing in type '{ leadId: string; gmailThreadId: string; subject: string; }' but required in type 'GmailThreadUncheckedCreateInput'.
+
+103         create: {
+            ~~~~~~
+
+  ../../packages/database/src/generated/index.d.ts:23789:5
+    23789     workspaceId: string
+              ~~~~~~~~~~~
+    'workspaceId' is declared here.
+  ../../packages/database/src/generated/index.d.ts:15224:5
+    15224     create: XOR<GmailThreadCreateInput, GmailThreadUncheckedCreateInput>
+              ~~~~~~
+    The expected type comes from property 'create' which is declared here on type '{ select?: GmailThreadSelect<DefaultArgs> | null | undefined; include?: GmailThreadInclude<DefaultArgs> | null | undefined; where: GmailThreadWhereUniqueInput; create: (Without<...> & GmailThreadUncheckedCreateInput) | (Without<...> & GmailThreadCreateInput); update: (Without<...> & GmailThreadUncheckedUpdateInput) ...'
+src/modules/realtime/guards/ws-jwt.guard.ts:30:61 - error TS18046: 'err' is of type 'unknown'.
+
+30       this.logger.error(`WebSocket Authentication failed: ${err.message}`);
+                                                               ~~~
+src/modules/realtime/realtime.gateway.ts:22:3 - error TS2564: Property 'server' has no initializer and is not definitely assigned in the constructor.
+
+22   server: Server;
+     ~~~~~~
+
+Found 7 error(s).
+
+ÔÇëELIFECYCLEÔÇë Command failed with exit code 1.

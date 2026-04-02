@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
 import { ScheduleModule } from '@nestjs/schedule';
+import { DiscoveryModule } from '@nestjs/core';
 
 import { GmailSyncScheduler } from './tasks/gmail-sync.scheduler';
 import { ReminderScheduler } from './tasks/reminder.scheduler';
@@ -11,6 +12,7 @@ import { QuotaWatchScheduler } from './tasks/quota-watch.scheduler';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ['../../.env', '.env'] }),
+    DiscoveryModule,
     ScheduleModule.forRoot(),
     BullModule.forRoot({
       redis: {

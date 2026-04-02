@@ -9,6 +9,19 @@ import { createAdapter } from '@socket.io/redis-adapter';
 import { Redis } from 'ioredis';
 import { AppModule } from './app.module';
 
+class RedisIoAdapter extends IoAdapter {
+  constructor(app: any, private readonly pubClient: Redis, private readonly subClient: Redis) {
+    super(app);
+  }
+
+  createIOServer(port: number, options?: any): any {
+    const server = super.createIOServer(port, options);
+    const redisAdapter = createAdapter(this.pubClient, this.subClient);
+    server.adapter(redisAdapter);
+    return server;
+  }
+}
+
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -60,19 +73,6 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
   logger.log(`API démarrée sur http://localhost:${port}`);
-}
-
-class RedisIoAdapter extends IoAdapter {
-  constructor(app: any, private readonly pubClient: Redis, private readonly subClient: Redis) {
-    super(app);
-  }
-
-  createIOServer(port: number, options?: any): any {
-    const server = super.createIOServer(port, options);
-    const redisAdapter = createAdapter(this.pubClient, this.subClient);
-    server.adapter(redisAdapter);
-    return server;
-  }
 }
 
 bootstrap();

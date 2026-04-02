@@ -1,0 +1,40 @@
+
+> @cc-outreach/scheduler@0.1.0 dev C:\Users\upris\cc-outreach\apps\scheduler
+> ts-node -r tsconfig-paths/register src/main.ts
+
+[32m[Nest] 1692  - [39m2026-04-01 21 h 17 min 41 s [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 1692  - [39m2026-04-01 21 h 17 min 41 s [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSchedulerAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 1692  - [39m2026-04-01 21 h 17 min 41 s [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBullModule dependencies initialized[39m[38;5;3m +0ms[39m
+[Nest] 1692  - 2026-04-01 21 h 17 min 41 s   ERROR [ExceptionHandler] Nest can't resolve dependencies of the SchedulerMetadataAccessor (?). Please make sure that the argument Reflector at index [0] is available in the ScheduleModule context.
+
+Potential solutions:
+- Is ScheduleModule a valid NestJS module?
+- If Reflector is a provider, is it part of the current ScheduleModule?
+- If Reflector is exported from a separate @Module, is that module imported within ScheduleModule?
+  @Module({
+    imports: [ /* the Module containing Reflector */ ]
+  })
+
+Error: Nest can't resolve dependencies of the SchedulerMetadataAccessor (?). Please make sure that the argument Reflector at index [0] is available in the ScheduleModule context.
+
+Potential solutions:
+- Is ScheduleModule a valid NestJS module?
+- If Reflector is a provider, is it part of the current ScheduleModule?
+- If Reflector is exported from a separate @Module, is that module imported within ScheduleModule?
+  @Module({
+    imports: [ /* the Module containing Reflector */ ]
+  })
+
+    at Injector.lookupComponentInParentModules (C:\Users\upris\cc-outreach\node_modules\.pnpm\@nestjs+core@10.4.22_@nestj_558ae3c7cf983d845eb445c3b6d17e96\node_modules\@nestjs\core\injector\injector.js:262:19)
+    at async Injector.resolveComponentInstance (C:\Users\upris\cc-outreach\node_modules\.pnpm\@nestjs+core@10.4.22_@nestj_558ae3c7cf983d845eb445c3b6d17e96\node_modules\@nestjs\core\injector\injector.js:215:33)
+    at async resolveParam (C:\Users\upris\cc-outreach\node_modules\.pnpm\@nestjs+core@10.4.22_@nestj_558ae3c7cf983d845eb445c3b6d17e96\node_modules\@nestjs\core\injector\injector.js:129:38)
+    at async Promise.all (index 0)
+    at async Injector.resolveConstructorParams (C:\Users\upris\cc-outreach\node_modules\.pnpm\@nestjs+core@10.4.22_@nestj_558ae3c7cf983d845eb445c3b6d17e96\node_modules\@nestjs\core\injector\injector.js:144:27)
+    at async Injector.loadInstance (C:\Users\upris\cc-outreach\node_modules\.pnpm\@nestjs+core@10.4.22_@nestj_558ae3c7cf983d845eb445c3b6d17e96\node_modules\@nestjs\core\injector\injector.js:70:13)
+    at async Injector.loadProvider (C:\Users\upris\cc-outreach\node_modules\.pnpm\@nestjs+core@10.4.22_@nestj_558ae3c7cf983d845eb445c3b6d17e96\node_modules\@nestjs\core\injector\injector.js:98:9)
+    at async C:\Users\upris\cc-outreach\node_modules\.pnpm\@nestjs+core@10.4.22_@nestj_558ae3c7cf983d845eb445c3b6d17e96\node_modules\@nestjs\core\injector\instance-loader.js:56:13
+    at async Promise.all (index 3)
+    at async InstanceLoader.createInstancesOfProviders (C:\Users\upris\cc-outreach\node_modules\.pnpm\@nestjs+core@10.4.22_@nestj_558ae3c7cf983d845eb445c3b6d17e96\node_modules\@nestjs\core\injector\instance-loader.js:55:9)
+C:\Users\upris\cc-outreach\apps\scheduler:
+ÔÇëERR_PNPM_RECURSIVE_RUN_FIRST_FAILÔÇë @cc-outreach/scheduler@0.1.0 dev: `ts-node -r tsconfig-paths/register src/main.ts`
+Exit status 1
